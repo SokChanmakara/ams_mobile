@@ -1,4 +1,5 @@
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/login_use_case.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/logout_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
@@ -6,10 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthNotifier extends Notifier<AuthState> {
   late final LoginUseCase _loginUseCase;
+  late final LogoutUseCase _logoutUseCase;
 
   @override
   AuthState build() {
     _loginUseCase = ref.read(loginUseCaseProvider);
+    _logoutUseCase = ref.read(logoutUseCaseProvider);
     return const AuthInitial();
   }
 
@@ -30,9 +33,7 @@ class AuthNotifier extends Notifier<AuthState> {
     state = const AuthLoading();
 
     try {
-      final response = await _loginUseCase.call(
-        LoginParams(event.loginEntity),
-      );
+      final response = await _loginUseCase.call(LoginParams(event.loginEntity));
 
       if (response.status.isSuccess) {
         state = LoginSuccess(message: response.status.message);
@@ -49,9 +50,13 @@ class AuthNotifier extends Notifier<AuthState> {
     state = const AuthLoading();
 
     try {
-      // Add your logout logic here when you have logout use case
-      await Future.delayed(const Duration(seconds: 1));
-      state = const LogoutSuccess();
+      final response = await _logoutUseCase.call(NoParams());
+
+      if (response.status.isSuccess) {
+        state = const LogoutSuccess();
+      } else {
+        state = LogoutFailure(errorMessage: response.status.message);
+      }
     } catch (e) {
       state = LogoutFailure(errorMessage: e.toString());
     }

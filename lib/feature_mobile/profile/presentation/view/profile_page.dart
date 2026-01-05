@@ -1,16 +1,42 @@
+import 'package:ams_mobile/core/service/navigation_service.dart';
+import 'package:ams_mobile/core/utils/app_colors.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/widget/logout_button.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_header.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_option_item.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_section.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/widget/theme_option_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Listen to auth state changes
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next is LogoutSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Logged out successfully!'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        NavigationService.navigateTo('/');
+      } else if (next is LogoutFailure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    });
+
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -111,8 +137,10 @@ class ProfilePage extends StatelessWidget {
 
                   // Logout Button
                   LogoutButton(
-                    onTap: () {
-                      // TODO: Implement logout logic
+                    onConfirmLogout: () {
+                      ref
+                          .read(authNotifierProvider.notifier)
+                          .handleEvent(const LogoutEvent());
                     },
                   ),
 
@@ -125,5 +153,4 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-
 }

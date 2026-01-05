@@ -39,14 +39,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       return;
     }
 
-    final loginEntity = LoginEntity(
-      username: username,
-      password: password,
-    );
+    final loginEntity = LoginEntity(username: username, password: password);
 
-    ref.read(authNotifierProvider.notifier).handleEvent(
-          LoginEvent(loginEntity: loginEntity),
-        );
+    ref
+        .read(authNotifierProvider.notifier)
+        .handleEvent(LoginEvent(loginEntity: loginEntity));
   }
 
   @override
@@ -56,12 +53,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     // Listen to auth state changes
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
       if (next is LoginSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.message ?? 'Login successful!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text(next.message ?? 'Login successful!'),
+        //     backgroundColor: Colors.green,
+        //   ),
+        // );
         NavigationService.navigateTo('/home');
       } else if (next is LoginFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -180,7 +177,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         CustomButton(
                           text: 'Log In',
                           icon: Icons.arrow_forward,
-                          onPressed: authState is AuthLoading ? null : _handleLogin,
+                          onPressed: authState is AuthLoading
+                              ? null
+                              : _handleLogin,
                           isLoading: authState is AuthLoading,
                         ),
                       ],
