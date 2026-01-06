@@ -3,10 +3,11 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    
 }
 
 android {
-    namespace = "com.example.ams_mobile"
+    namespace = "com.ams.mobile"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +22,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.ams_mobile"
+        applicationId = "com.ams.mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -35,6 +36,18 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+    flavorDimensions += "default"
+    productFlavors {
+        create("prod") {
+            dimension = "default"
+            resValue("string", "app_name", "ams-mobile")
+        }
+        create("dev") {
+            dimension = "default"
+            resValue("string", "app_name", "ams-mobile-dev")
+            applicationIdSuffix = ".dev"
         }
     }
 }

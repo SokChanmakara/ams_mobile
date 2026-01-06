@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "24076498078",
+    "project_id": "ams-mobile-dev",
+    "storage_bucket": "ams-mobile-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24076498078:android:fca779469eec3ed2a9f78f",
+        "android_client_info": {
+          "package_name": "com.ams.mobile.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT640Z8TJpQgIXrAynIm9juLBjD40x9Po"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
