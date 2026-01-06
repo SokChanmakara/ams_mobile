@@ -52,24 +52,6 @@ android {
     }
 }
 
-// Copy the correct google-services.json based on the flavor
-androidComponents {
-    onVariants { variant ->
-        val flavorName = variant.flavorName
-        if (flavorName != null) {
-            val googleServicesTask = tasks.register("copy${variant.name.capitalize()}GoogleServices", Copy::class) {
-                from("src/$flavorName")
-                include("google-services.json")
-                into(".")
-            }
-
-            tasks.named("process${variant.name.capitalize()}GoogleServices") {
-                dependsOn(googleServicesTask)
-            }
-        }
-    }
-}
-
 flutter {
     source = "../.."
 }

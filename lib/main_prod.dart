@@ -15,16 +15,16 @@ void main() async {
   Global.baseURL = "https//ams-mobile/prod/";
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load environment variables first (required for Firebase options)
+  await dotenv.load(fileName: '.env');
+
   // Initialize Firebase with prod options
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   // Initialize Firebase Messaging (includes Awesome Notifications)
-  await FirebaseMessagingService().initialize();
-
-  // Load environment variables
-  await dotenv.load(fileName: '.env');
+  FirebaseMessagingService().initialize();
 
   // Initialize storage service
   await StorageService.init();
