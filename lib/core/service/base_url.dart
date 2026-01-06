@@ -4,4 +4,5 @@ class BaseUrl {
   static String changePassword = '/auth/change-password';
   static String forgotPassword = '/auth/forgot-password';
   static String refreshToken = '/auth/refresh-token';
+  static String userProfile = '/auth/me';
 }
