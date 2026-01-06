@@ -1,3 +1,4 @@
+import 'package:ams_mobile/core/interceptors/auth_token_interceptor.dart';
 import 'package:ams_mobile/core/service/firebase_messaging_service.dart';
 import 'package:ams_mobile/core/service/http_service.dart';
 import 'package:ams_mobile/core/service/storage_service.dart';
@@ -19,9 +20,7 @@ void main() async {
   await dotenv.load(fileName: '.env');
 
   // Initialize Firebase with prod options
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize Firebase Messaging (includes Awesome Notifications)
   FirebaseMessagingService().initialize();
@@ -33,16 +32,21 @@ void main() async {
   HttpService.init(
     baseUrl: dotenv.env['API_BASE_URL'] ?? '',
     timeout: const Duration(seconds: 30),
-    interceptors: [
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-      ),
-    ],
+  );
+
+  // Add interceptors after initialization
+  HttpService.instance.addInterceptor(
+    AuthTokenInterceptor(HttpService.instance.dio),
+  );
+  HttpService.instance.addInterceptor(
+    PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseBody: true,
+      responseHeader: false,
+      error: true,
+      compact: true,
+    ),
   );
 
   runApp(

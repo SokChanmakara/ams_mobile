@@ -28,10 +28,12 @@ class ProfileSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        ...children.map((child) => Padding(
-              padding: EdgeInsets.only(bottom: 12.h),
-              child: child,
-            )),
+        ...children.map(
+          (child) => Padding(
+            padding: EdgeInsets.only(bottom: 12.h),
+            child: child,
+          ),
+        ),
       ],
     );
   }

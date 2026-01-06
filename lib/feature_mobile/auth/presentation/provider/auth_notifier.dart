@@ -1,3 +1,4 @@
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/change_password_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/login_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/logout_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
@@ -8,11 +9,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class AuthNotifier extends Notifier<AuthState> {
   late final LoginUseCase _loginUseCase;
   late final LogoutUseCase _logoutUseCase;
+  late final ChangePasswordUseCase _changePasswordUseCase;
 
   @override
   AuthState build() {
     _loginUseCase = ref.read(loginUseCaseProvider);
     _logoutUseCase = ref.read(logoutUseCaseProvider);
+    _changePasswordUseCase = ref.read(changePasswordUseCaseProvider);
     return const AuthInitial();
   }
 
@@ -23,6 +26,8 @@ class AuthNotifier extends Notifier<AuthState> {
         await _handleLogin(event);
       case LogoutEvent():
         await _handleLogout();
+      case ChangePasswordEvent():
+        await _handleChangePassword(event);
       case ResetAuthEvent():
         _handleReset();
     }
@@ -59,6 +64,25 @@ class AuthNotifier extends Notifier<AuthState> {
       }
     } catch (e) {
       state = LogoutFailure(errorMessage: e.toString());
+    }
+  }
+
+  /// Handle change password event
+  Future<void> _handleChangePassword(ChangePasswordEvent event) async {
+    state = const AuthLoading();
+
+    try {
+      final response = await _changePasswordUseCase.call(
+        ChangePasswordParams(event.changePasswordEntity),
+      );
+
+      if (response.status.isSuccess) {
+        state = ChangePasswordSuccess(message: response.status.message);
+      } else {
+        state = ChangePasswordFailure(errorMessage: response.status.message);
+      }
+    } catch (e) {
+      state = ChangePasswordFailure(errorMessage: e.toString());
     }
   }
 

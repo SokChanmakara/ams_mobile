@@ -30,11 +30,9 @@ class HttpService {
         connectTimeout: timeout,
         receiveTimeout: timeout,
         sendTimeout: timeout,
-        headers: defaultHeaders ??
-            {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
+        headers:
+            defaultHeaders ??
+            {'Content-Type': 'application/json', 'Accept': 'application/json'},
         validateStatus: (status) => status != null && status < 500,
       ),
     );

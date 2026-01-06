@@ -10,7 +10,8 @@ import 'package:go_router/go_router.dart';
 /// - NavigationService.showSnackBar('Message')
 class NavigationService {
   // Global key for accessing navigator state
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   // Get the current BuildContext
   static BuildContext? get context => navigatorKey.currentContext;

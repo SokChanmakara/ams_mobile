@@ -30,9 +30,7 @@ class ProfileOptionItem extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            border: Border.all(
-              color: AppColors.border(context),
-            ),
+            border: Border.all(color: AppColors.border(context)),
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -46,13 +44,8 @@ class ProfileOptionItem extends StatelessWidget {
             children: [
               _buildIcon(),
               SizedBox(width: 16.w),
-              Expanded(
-                child: _buildContent(context),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: AppColors.textTertiary(context),
-              ),
+              Expanded(child: _buildContent(context)),
+              Icon(Icons.chevron_right, color: AppColors.textTertiary(context)),
             ],
           ),
         ),
@@ -68,11 +61,7 @@ class ProfileOptionItem extends StatelessWidget {
         color: AppColors.primary.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon,
-        color: AppColors.primary,
-        size: 20.sp,
-      ),
+      child: Icon(icon, color: AppColors.primary, size: 20.sp),
     );
   }
 
@@ -82,9 +71,7 @@ class ProfileOptionItem extends StatelessWidget {
       children: [
         Text(
           title,
-          style: AppTextStyles.bodyLarge(
-            fontWeight: AppTextStyles.semiBold,
-          ),
+          style: AppTextStyles.bodyLarge(fontWeight: AppTextStyles.semiBold),
         ),
         SizedBox(height: 2.h),
         Text(

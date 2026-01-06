@@ -29,26 +29,30 @@ class FirebaseMessagingService {
   /// Initialize Firebase Messaging
   Future<void> initialize() async {
     try {
-      debugPrint('\n🔥 ========== FIREBASE MESSAGING INITIALIZATION ==========');
+      debugPrint(
+        '\n🔥 ========== FIREBASE MESSAGING INITIALIZATION ==========',
+      );
 
       // Initialize Awesome Notifications first
       await _notificationService.initialize();
 
       // Request permission for iOS
-      NotificationSettings settings = await _firebaseMessaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
+      NotificationSettings settings = await _firebaseMessaging
+          .requestPermission(
+            alert: true,
+            announcement: false,
+            badge: true,
+            carPlay: false,
+            criticalAlert: false,
+            provisional: false,
+            sound: true,
+          );
 
       debugPrint('\n📱 ========== FCM PERMISSION STATUS ==========');
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         debugPrint('✅ User granted permission: AUTHORIZED');
-      } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
         debugPrint('⚠️  User granted permission: PROVISIONAL');
       } else {
         debugPrint('❌ User declined or has not accepted permission');
@@ -61,7 +65,9 @@ class FirebaseMessagingService {
       debugPrint('\n🔑 ========== FCM TOKEN DEBUG ==========');
       debugPrint('🔑 FCM Token: $_fcmToken');
       debugPrint('🔑 Token Length: ${_fcmToken?.length ?? 0} characters');
-      debugPrint('🔑 Token Status: ${_fcmToken != null ? "AVAILABLE" : "NOT AVAILABLE"}');
+      debugPrint(
+        '🔑 Token Status: ${_fcmToken != null ? "AVAILABLE" : "NOT AVAILABLE"}',
+      );
       debugPrint('🔑 ==========================================\n');
 
       // Listen to token refresh
@@ -85,7 +91,9 @@ class FirebaseMessagingService {
         if (message.notification != null) {
           debugPrint('📩 Notification Title: ${message.notification!.title}');
           debugPrint('📩 Notification Body: ${message.notification!.body}');
-          debugPrint('📩 Notification Image: ${message.notification!.android?.imageUrl ?? message.notification!.apple?.imageUrl ?? "None"}');
+          debugPrint(
+            '📩 Notification Image: ${message.notification!.android?.imageUrl ?? message.notification!.apple?.imageUrl ?? "None"}',
+          );
 
           // Show notification using Awesome Notifications
           _showAwesomeNotification(message);
@@ -96,11 +104,15 @@ class FirebaseMessagingService {
       });
 
       // Handle background messages
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+        _firebaseMessagingBackgroundHandler,
+      );
 
       // Handle notification taps when app is in background
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        debugPrint('\n👆 ========== NOTIFICATION OPENED (BACKGROUND) ==========');
+        debugPrint(
+          '\n👆 ========== NOTIFICATION OPENED (BACKGROUND) ==========',
+        );
         debugPrint('👆 Message ID: ${message.messageId}');
         debugPrint('👆 Message Data: ${message.data}');
         debugPrint('👆 ==========================================\n');
@@ -109,10 +121,12 @@ class FirebaseMessagingService {
       });
 
       // Check if app was opened from a terminated state
-      RemoteMessage? initialMessage =
-          await _firebaseMessaging.getInitialMessage();
+      RemoteMessage? initialMessage = await _firebaseMessaging
+          .getInitialMessage();
       if (initialMessage != null) {
-        debugPrint('\n🚀 ========== APP OPENED FROM NOTIFICATION (TERMINATED) ==========');
+        debugPrint(
+          '\n🚀 ========== APP OPENED FROM NOTIFICATION (TERMINATED) ==========',
+        );
         debugPrint('🚀 Message ID: ${initialMessage.messageId}');
         debugPrint('🚀 Message Data: ${initialMessage.data}');
         debugPrint('🚀 ==========================================\n');
@@ -160,18 +174,17 @@ class FirebaseMessagingService {
       title: notification.title ?? 'New Notification',
       body: notification.body ?? '',
       channelKey: channelKey,
-      payload: message.data.map((key, value) => MapEntry(key, value.toString())),
-      bigPicture: notification.android?.imageUrl ?? notification.apple?.imageUrl,
+      payload: message.data.map(
+        (key, value) => MapEntry(key, value.toString()),
+      ),
+      bigPicture:
+          notification.android?.imageUrl ?? notification.apple?.imageUrl,
     );
   }
 
   /// Subscribe to default topics
   Future<void> _subscribeToDefaultTopics() async {
-    final defaultTopics = [
-      'all_users',
-      'general_updates',
-      'announcements',
-    ];
+    final defaultTopics = ['all_users', 'general_updates', 'announcements'];
 
     debugPrint('\n📢 ========== SUBSCRIBING TO TOPICS ==========');
     for (String topic in defaultTopics) {

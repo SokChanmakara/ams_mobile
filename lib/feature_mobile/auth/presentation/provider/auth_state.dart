@@ -48,3 +48,17 @@ class Authenticated extends AuthState {
 class Unauthenticated extends AuthState {
   const Unauthenticated();
 }
+
+/// State when change password is successful
+class ChangePasswordSuccess extends AuthState {
+  final String? message;
+
+  const ChangePasswordSuccess({this.message});
+}
+
+/// State when change password fails
+class ChangePasswordFailure extends AuthState {
+  final String errorMessage;
+
+  const ChangePasswordFailure({required this.errorMessage});
+}

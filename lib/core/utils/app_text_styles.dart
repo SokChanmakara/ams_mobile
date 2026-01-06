@@ -166,41 +166,29 @@ class AppTextStyles {
       );
 
   // Custom Sizes for specific use cases
-  static TextStyle h1({Color? color, FontWeight? fontWeight}) => _baseStyle(
-        fontSize: 32,
-        fontWeight: fontWeight ?? bold,
-        color: color,
-      );
+  static TextStyle h1({Color? color, FontWeight? fontWeight}) =>
+      _baseStyle(fontSize: 32, fontWeight: fontWeight ?? bold, color: color);
 
-  static TextStyle h2({Color? color, FontWeight? fontWeight}) => _baseStyle(
-        fontSize: 28,
-        fontWeight: fontWeight ?? bold,
-        color: color,
-      );
+  static TextStyle h2({Color? color, FontWeight? fontWeight}) =>
+      _baseStyle(fontSize: 28, fontWeight: fontWeight ?? bold, color: color);
 
   static TextStyle h3({Color? color, FontWeight? fontWeight}) => _baseStyle(
-        fontSize: 24,
-        fontWeight: fontWeight ?? semiBold,
-        color: color,
-      );
+    fontSize: 24,
+    fontWeight: fontWeight ?? semiBold,
+    color: color,
+  );
 
   static TextStyle h4({Color? color, FontWeight? fontWeight}) => _baseStyle(
-        fontSize: 20,
-        fontWeight: fontWeight ?? semiBold,
-        color: color,
-      );
+    fontSize: 20,
+    fontWeight: fontWeight ?? semiBold,
+    color: color,
+  );
 
-  static TextStyle h5({Color? color, FontWeight? fontWeight}) => _baseStyle(
-        fontSize: 18,
-        fontWeight: fontWeight ?? medium,
-        color: color,
-      );
+  static TextStyle h5({Color? color, FontWeight? fontWeight}) =>
+      _baseStyle(fontSize: 18, fontWeight: fontWeight ?? medium, color: color);
 
-  static TextStyle h6({Color? color, FontWeight? fontWeight}) => _baseStyle(
-        fontSize: 16,
-        fontWeight: fontWeight ?? medium,
-        color: color,
-      );
+  static TextStyle h6({Color? color, FontWeight? fontWeight}) =>
+      _baseStyle(fontSize: 16, fontWeight: fontWeight ?? medium, color: color);
 
   static TextStyle subtitle1({Color? color, FontWeight? fontWeight}) =>
       _baseStyle(
@@ -236,13 +224,12 @@ class AppTextStyles {
       );
 
   // Button Styles
-  static TextStyle button({Color? color, FontWeight? fontWeight}) =>
-      _baseStyle(
-        fontSize: 14,
-        fontWeight: fontWeight ?? medium,
-        color: color,
-        letterSpacing: 1.25,
-      );
+  static TextStyle button({Color? color, FontWeight? fontWeight}) => _baseStyle(
+    fontSize: 14,
+    fontWeight: fontWeight ?? medium,
+    color: color,
+    letterSpacing: 1.25,
+  );
 
   static TextStyle buttonLarge({Color? color, FontWeight? fontWeight}) =>
       _baseStyle(
@@ -267,14 +254,13 @@ class AppTextStyles {
     FontWeight? fontWeight,
     double? height,
     double? letterSpacing,
-  }) =>
-      _baseStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight ?? regular,
-        color: color,
-        height: height,
-        letterSpacing: letterSpacing,
-      );
+  }) => _baseStyle(
+    fontSize: fontSize,
+    fontWeight: fontWeight ?? regular,
+    color: color,
+    height: height,
+    letterSpacing: letterSpacing,
+  );
 
   /// Get the base Sofia Sans TextTheme for the entire app
   static TextTheme getTextTheme({Color? color}) {

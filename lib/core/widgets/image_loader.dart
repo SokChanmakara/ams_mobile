@@ -77,10 +77,10 @@ class ImageLoader extends StatelessWidget {
             if (loading != null) return loading!;
             return needShimmer
                 ? ShimmerContainer(
-              width: width ?? 0,
-              height: height ?? 0,
-              radius: 20,
-            )
+                    width: width ?? 0,
+                    height: height ?? 0,
+                    radius: 20,
+                  )
                 : const SizedBox();
           },
           imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,

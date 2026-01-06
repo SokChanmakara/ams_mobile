@@ -1,4 +1,6 @@
 import 'package:ams_mobile/core/service/navigation_service.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
 import 'package:ams_mobile/feature_mobile/community/community_page.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/widget/home_content.dart';
@@ -18,6 +20,16 @@ class AppRouter {
         path: '/',
         name: 'login',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/change-password',
+        name: 'change password',
+        builder: (context, state) => const ChangePasswordView(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        name: 'forgot password',
+        builder: (context, state) => const ForgotPasswordPage(),
       ),
       ShellRoute(
         builder: (context, state, child) {

@@ -166,7 +166,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             size: ButtonSize.small,
                             fullWidth: false,
                             onPressed: () {
-                              // Handle forgot password
+                              NavigationService.push('/forgot-password');
                             },
                           ),
                         ),

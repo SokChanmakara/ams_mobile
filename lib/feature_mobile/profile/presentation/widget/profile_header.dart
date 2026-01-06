@@ -23,9 +23,7 @@ class ProfileHeader extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           name,
-          style: AppTextStyles.headlineMedium(
-            fontWeight: AppTextStyles.bold,
-          ),
+          style: AppTextStyles.headlineMedium(fontWeight: AppTextStyles.bold),
         ),
         const SizedBox(height: 4),
         Text(
@@ -44,24 +42,14 @@ class ProfileHeader extends StatelessWidget {
       height: 100,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: AppColors.primary,
-          width: 3,
-        ),
+        border: Border.all(color: AppColors.primary, width: 3),
         image: imageUrl != null
-            ? DecorationImage(
-                image: NetworkImage(imageUrl!),
-                fit: BoxFit.cover,
-              )
+            ? DecorationImage(image: NetworkImage(imageUrl!), fit: BoxFit.cover)
             : null,
         color: imageUrl == null ? AppColors.primarySurface : null,
       ),
       child: imageUrl == null
-          ? Icon(
-              Icons.person,
-              size: 50,
-              color: AppColors.primary,
-            )
+          ? Icon(Icons.person, size: 50, color: AppColors.primary)
           : null,
     );
   }

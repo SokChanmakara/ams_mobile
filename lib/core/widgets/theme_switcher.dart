@@ -121,11 +121,7 @@ class _ThemeOption extends StatelessWidget {
                 ],
               ),
             ),
-            if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: AppColors.primary,
-              ),
+            if (isSelected) Icon(Icons.check_circle, color: AppColors.primary),
           ],
         ),
       ),

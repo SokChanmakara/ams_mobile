@@ -22,9 +22,7 @@ class ThemeOptionItem extends ConsumerWidget {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.border(context),
-          ),
+          border: Border.all(color: AppColors.border(context)),
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
@@ -38,9 +36,7 @@ class ThemeOptionItem extends ConsumerWidget {
           children: [
             _buildIcon(context, isDark, isSystem),
             SizedBox(width: 16.w),
-            Expanded(
-              child: _buildContent(context, isDark, isSystem),
-            ),
+            Expanded(child: _buildContent(context, isDark, isSystem)),
             _buildSwitch(ref, isDark, isSystem),
           ],
         ),
@@ -86,9 +82,7 @@ class ThemeOptionItem extends ConsumerWidget {
       children: [
         Text(
           title,
-          style: AppTextStyles.bodyLarge(
-            fontWeight: AppTextStyles.semiBold,
-          ),
+          style: AppTextStyles.bodyLarge(fontWeight: AppTextStyles.semiBold),
         ),
         SizedBox(height: 2.h),
         Text(
