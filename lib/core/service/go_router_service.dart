@@ -1,3 +1,4 @@
+import 'package:ams_mobile/core/screens/splash_screen.dart';
 import 'package:ams_mobile/core/service/navigation_service.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
@@ -13,11 +14,16 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: NavigationService.navigatorKey,
-    initialLocation: '/',
+    initialLocation: '/splash',
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
-        path: '/',
+        path: '/splash',
+        name: 'splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/login',
         name: 'login',
         builder: (context, state) => const LoginPage(),
       ),

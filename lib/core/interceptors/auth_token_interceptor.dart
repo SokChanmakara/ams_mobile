@@ -16,6 +16,11 @@ class AuthTokenInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    // Don't add auth token to logout requests (they might have expired tokens)
+    if (options.path == BaseUrl.logout) {
+      return super.onRequest(options, handler);
+    }
+
     // Add access token to requests automatically
     final accessToken = StorageService.getAccessToken();
     if (accessToken != null && accessToken.isNotEmpty) {

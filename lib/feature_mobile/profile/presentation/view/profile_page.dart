@@ -1,5 +1,6 @@
 import 'package:ams_mobile/core/service/navigation_service.dart';
 import 'package:ams_mobile/core/utils/app_colors.dart';
+// import 'package:ams_mobile/core/widgets/test_refresh_token_button.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
@@ -26,7 +27,7 @@ class ProfilePage extends ConsumerWidget {
             backgroundColor: AppColors.success,
           ),
         );
-        NavigationService.navigateTo('/');
+        NavigationService.navigateTo('/login');
       } else if (next is LogoutFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -144,6 +145,7 @@ class ProfilePage extends ConsumerWidget {
                     },
                   ),
 
+                  // TestRefreshTokenButton(),
                   SizedBox(height: 80.h),
                 ],
               ),

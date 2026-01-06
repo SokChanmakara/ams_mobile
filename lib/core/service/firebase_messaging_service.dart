@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:ams_mobile/core/service/notification_service.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 

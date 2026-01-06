@@ -33,7 +33,12 @@ class HttpService {
         headers:
             defaultHeaders ??
             {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        validateStatus: (status) => status != null && status < 500,
+        validateStatus: (status) {
+          // Treat 401 as error to trigger interceptor for token refresh
+          // Other 4xx errors are treated as success (handled in app logic)
+          if (status == 401) return false;
+          return status != null && status < 500;
+        },
       ),
     );
     if (interceptors != null) {

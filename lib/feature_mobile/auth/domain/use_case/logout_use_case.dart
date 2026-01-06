@@ -13,11 +13,11 @@ class LogoutUseCase implements BaseUseCase<void, NoParams> {
   @override
   Future<BaseResponse<void>> call(NoParams params) async {
     try {
-      // Call API to logout
+      // Call API to logout (errors are expected and ignored)
       await authRepository.logout();
     } catch (e) {
-      // Log error but continue with local logout
-      print('⚠️ Logout API call failed: $e');
+      // Silently ignore logout API errors
+      // User will be logged out locally regardless
     }
 
     // Clear local storage and remove auth header regardless of API response
