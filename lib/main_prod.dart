@@ -1,8 +1,11 @@
+import 'package:ams_mobile/core/service/firebase_messaging_service.dart';
 import 'package:ams_mobile/core/service/http_service.dart';
 import 'package:ams_mobile/core/service/storage_service.dart';
+import 'package:ams_mobile/firebase_options_prod.dart';
 import 'package:ams_mobile/global.dart';
 import 'package:ams_mobile/my_app.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +14,14 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 void main() async {
   Global.baseURL = "https//ams-mobile/prod/";
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase with prod options
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Initialize Firebase Messaging (includes Awesome Notifications)
+  await FirebaseMessagingService().initialize();
 
   // Load environment variables
   await dotenv.load(fileName: '.env');

@@ -3,7 +3,7 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,6 +48,24 @@ android {
             dimension = "default"
             resValue("string", "app_name", "ams-mobile-dev")
             applicationIdSuffix = ".dev"
+        }
+    }
+}
+
+// Copy the correct google-services.json based on the flavor
+androidComponents {
+    onVariants { variant ->
+        val flavorName = variant.flavorName
+        if (flavorName != null) {
+            val googleServicesTask = tasks.register("copy${variant.name.capitalize()}GoogleServices", Copy::class) {
+                from("src/$flavorName")
+                include("google-services.json")
+                into(".")
+            }
+
+            tasks.named("process${variant.name.capitalize()}GoogleServices") {
+                dependsOn(googleServicesTask)
+            }
         }
     }
 }
