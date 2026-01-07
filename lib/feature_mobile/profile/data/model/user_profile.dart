@@ -20,7 +20,7 @@ class UserProfile {
   String get email => user.email;
 
   /// Get user's profile image URL
-  String get imageUrl => user.imageUrl;
+  String get imageUrl => user.imageUrl ?? '';
 
   /// Get client/unit information
   String get unitInfo => user.clientName;

@@ -5,8 +5,15 @@ class UpdateProfileEntity {
   final String? lastName;
   final String? email;
   final String? phone;
+  final String? imageUrl;
 
-  UpdateProfileEntity({this.firstName, this.lastName, this.email, this.phone});
+  UpdateProfileEntity({
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.phone,
+    this.imageUrl,
+  });
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
@@ -15,11 +22,16 @@ class UpdateProfileEntity {
     if (lastName != null) data['lastName'] = lastName;
     if (email != null) data['email'] = email;
     if (phone != null) data['phone'] = phone;
+    if (imageUrl != null) data['imageUrl'] = imageUrl;
 
     return data;
   }
 
   /// Check if entity has any updates
   bool get hasUpdates =>
-      firstName != null || lastName != null || email != null || phone != null;
+      firstName != null ||
+      lastName != null ||
+      email != null ||
+      phone != null ||
+      imageUrl != null;
 }

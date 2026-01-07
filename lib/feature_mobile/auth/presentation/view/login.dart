@@ -9,6 +9,7 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/custom_buttons.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -20,6 +21,26 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  static const String _usernameKey = 'last_username';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedUsername();
+  }
+
+  Future<void> _loadSavedUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedUsername = prefs.getString(_usernameKey);
+    if (savedUsername != null && savedUsername.isNotEmpty) {
+      _emailController.text = savedUsername;
+    }
+  }
+
+  Future<void> _saveUsername(String username) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_usernameKey, username);
+  }
 
   @override
   void dispose() {
@@ -59,6 +80,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         //     backgroundColor: Colors.green,
         //   ),
         // );
+        _saveUsername(_emailController.text.trim());
         NavigationService.navigateTo('/home');
       } else if (next is LoginFailure) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -8,8 +8,8 @@ class User {
   final String clientName;
   final bool emailVerified;
   final String lastLoginAt;
-  final String image;
-  final String imageUrl;
+  final String? image;
+  final String? imageUrl;
 
   User({
     required this.id,
@@ -36,8 +36,8 @@ class User {
       clientName: json['clientName'] as String,
       emailVerified: json['emailVerified'] as bool,
       lastLoginAt: json['lastLoginAt'] as String,
-      image: json['image'] as String,
-      imageUrl: json['imageUrl'] as String,
+      image: json['image'] as String?,
+      imageUrl: json['imageUrl'] as String?,
     );
   }
 
