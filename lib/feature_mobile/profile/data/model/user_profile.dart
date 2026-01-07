@@ -24,4 +24,6 @@ class UserProfile {
 
   /// Get client/unit information
   String get unitInfo => user.clientName;
+
+  String get phone => user.phone ?? '';
 }

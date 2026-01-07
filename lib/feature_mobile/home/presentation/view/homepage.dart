@@ -21,7 +21,8 @@ class _CondoHomePageState extends ConsumerState<CondoHomePage> {
     // Fetch profile once on init
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = ref.read(profileNotifierProvider);
-      if (state is ProfileInitial) {
+      // Fetch profile if not already loaded or if loading
+      if (state is! ProfileLoaded && state is! ProfileLoading) {
         ref.read(profileNotifierProvider.notifier).fetchProfile();
       }
     });

@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:ams_mobile/core/service/http_service.dart';
 import 'package:ams_mobile/core/service/storage_service.dart';
+import 'package:ams_mobile/feature_mobile/profile/domain/entities/update_profile_entity.dart';
 import 'package:ams_mobile/feature_mobile/profile/domain/use_case/get_user_profile.dart';
+import 'package:ams_mobile/feature_mobile/profile/domain/use_case/update_user_profile.dart';
 import 'package:ams_mobile/feature_mobile/profile/domain/use_case/upload_profile_image.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
@@ -10,11 +12,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfileNotifier extends Notifier<ProfileState> {
   late final GetUserProfileUseCase _getUserProfileUseCase;
+  late final UpdateUserProfileUseCase _updateUserProfileUseCase;
   late final UploadProfileImageUseCase _uploadProfileImageUseCase;
 
   @override
   ProfileState build() {
     _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
+    _updateUserProfileUseCase = ref.read(updateUserProfileUseCaseProvider);
     _uploadProfileImageUseCase = ref.read(uploadProfileImageUseCaseProvider);
     return const ProfileInitial();
   }
@@ -71,6 +75,36 @@ class ProfileNotifier extends Notifier<ProfileState> {
         return true;
       } else {
         // Restore previous state if upload fails
+        state = currentState;
+        return false;
+      }
+    } catch (e) {
+      // Restore previous state on error
+      state = currentState;
+      return false;
+    }
+  }
+
+  /// Update user profile
+  Future<bool> updateProfile(UpdateProfileEntity entity) async {
+    // Don't proceed if no updates
+    if (!entity.hasUpdates) {
+      return false;
+    }
+
+    // Save current state to restore if update fails
+    final currentState = state;
+    state = const ProfileLoading();
+
+    try {
+      final response = await _updateUserProfileUseCase.call(entity);
+
+      if (response.status.isSuccess && response.data != null) {
+        // Update state with new profile data
+        state = ProfileLoaded(userProfile: response.data!);
+        return true;
+      } else {
+        // Restore previous state if update fails
         state = currentState;
         return false;
       }

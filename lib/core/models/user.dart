@@ -3,6 +3,7 @@ class User {
   final String email;
   final String firstName;
   final String lastName;
+  final String? phone;
   final String clientId;
   final String clientName;
   final bool emailVerified;
@@ -15,6 +16,7 @@ class User {
     required this.email,
     required this.firstName,
     required this.lastName,
+    required this.phone,
     required this.clientId,
     required this.clientName,
     required this.emailVerified,
@@ -29,6 +31,7 @@ class User {
       email: json['email'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
+      phone: json['phone'] as String?,
       clientId: json['clientId'] as String,
       clientName: json['clientName'] as String,
       emailVerified: json['emailVerified'] as bool,
@@ -43,6 +46,7 @@ class User {
     'email': email,
     'firstName': firstName,
     'lastName': lastName,
+    'phone': phone,
     'clientId': clientId,
     'clientName': clientName,
     'emailVerified': emailVerified,

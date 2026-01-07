@@ -5,6 +5,7 @@ import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
 import 'package:ams_mobile/feature_mobile/community/community_page.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/view/homepage.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/view/edit_profile_page.dart';
 import 'package:ams_mobile/feature_mobile/root/presentation/view/rootScreen.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/view/profile_page.dart';
 import 'package:ams_mobile/feature_mobile/service/service_page.dart';
@@ -65,6 +66,12 @@ class AppRouter {
             name: 'profile',
             pageBuilder: (context, state) =>
                 NoTransitionPage(child: const ProfilePage()),
+          ),
+          GoRoute(
+            path: '/edit-profile',
+            name: 'edit-profile',
+            pageBuilder: (context, state) =>
+                NoTransitionPage(child: const EditProfilePage()),
           ),
         ],
       ),

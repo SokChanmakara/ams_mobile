@@ -252,6 +252,14 @@ class ProfilePage extends ConsumerWidget {
                       // TODO: Navigate to unit details page
                     },
                   ),
+                  ProfileOptionItem(
+                    icon: Icons.edit_outlined,
+                    title: 'Edit Profile',
+                    subtitle: 'Change account Details',
+                    onTap: () {
+                      NavigationService.push('/edit-profile');
+                    },
+                  ),
                 ],
               ),
 
