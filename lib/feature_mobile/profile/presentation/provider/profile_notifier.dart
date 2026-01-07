@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:ams_mobile/core/service/http_service.dart';
 import 'package:ams_mobile/core/service/storage_service.dart';
 import 'package:ams_mobile/feature_mobile/profile/domain/use_case/get_user_profile.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_event.dart';
+import 'package:ams_mobile/feature_mobile/profile/domain/use_case/upload_profile_image.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
 import 'package:dio/dio.dart';
@@ -9,25 +10,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfileNotifier extends Notifier<ProfileState> {
   late final GetUserProfileUseCase _getUserProfileUseCase;
+  late final UploadProfileImageUseCase _uploadProfileImageUseCase;
 
   @override
   ProfileState build() {
     _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
+    _uploadProfileImageUseCase = ref.read(uploadProfileImageUseCaseProvider);
     return const ProfileInitial();
   }
 
-  /// Handle profile events
-  Future<void> handleEvent(ProfileEvent event) async {
-    switch (event) {
-      case FetchProfileEvent():
-        await _fetchProfile();
-      case ResetProfileEvent():
-        _resetProfile();
-    }
-  }
-
   /// Fetch user profile
-  Future<void> _fetchProfile() async {
+  Future<void> fetchProfile() async {
     state = const ProfileLoading();
 
     try {
@@ -63,8 +56,33 @@ class ProfileNotifier extends Notifier<ProfileState> {
     }
   }
 
+  /// Upload profile image
+  Future<bool> uploadProfileImage(File imageFile) async {
+    // Save current state to restore if upload fails
+    final currentState = state;
+    state = const ProfileLoading();
+
+    try {
+      final response = await _uploadProfileImageUseCase.call(imageFile);
+
+      if (response.status.isSuccess) {
+        // Refresh profile after successful upload
+        await fetchProfile();
+        return true;
+      } else {
+        // Restore previous state if upload fails
+        state = currentState;
+        return false;
+      }
+    } catch (e) {
+      // Restore previous state on error
+      state = currentState;
+      return false;
+    }
+  }
+
   /// Reset profile state
-  void _resetProfile() {
+  void resetProfile() {
     state = const ProfileInitial();
   }
 }

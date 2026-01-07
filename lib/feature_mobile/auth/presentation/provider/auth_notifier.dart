@@ -4,6 +4,7 @@ import 'package:ams_mobile/feature_mobile/auth/domain/use_case/logout_use_case.d
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthNotifier extends Notifier<AuthState> {
@@ -46,7 +47,32 @@ class AuthNotifier extends Notifier<AuthState> {
         state = LoginFailure(errorMessage: response.status.message);
       }
     } catch (e) {
-      state = LoginFailure(errorMessage: e.toString());
+      // Provide user-friendly error message instead of technical details
+      String errorMessage = 'Login failed. Please try again.';
+
+      if (e is DioException) {
+        switch (e.response?.statusCode) {
+          case 401:
+            errorMessage = 'Invalid username or password.';
+            break;
+          case 404:
+            errorMessage = 'Service not found. Please try again later.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later.';
+            break;
+          default:
+            if (e.type == DioExceptionType.connectionTimeout ||
+                e.type == DioExceptionType.sendTimeout ||
+                e.type == DioExceptionType.receiveTimeout) {
+              errorMessage = 'Connection timeout. Please check your internet.';
+            } else if (e.type == DioExceptionType.connectionError) {
+              errorMessage = 'No internet connection.';
+            }
+        }
+      }
+
+      state = LoginFailure(errorMessage: errorMessage);
     }
   }
 
@@ -63,7 +89,20 @@ class AuthNotifier extends Notifier<AuthState> {
         state = LogoutFailure(errorMessage: response.status.message);
       }
     } catch (e) {
-      state = LogoutFailure(errorMessage: e.toString());
+      // Provide user-friendly error message
+      String errorMessage = 'Logout failed. Please try again.';
+
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionTimeout ||
+            e.type == DioExceptionType.sendTimeout ||
+            e.type == DioExceptionType.receiveTimeout) {
+          errorMessage = 'Connection timeout. Please check your internet.';
+        } else if (e.type == DioExceptionType.connectionError) {
+          errorMessage = 'No internet connection.';
+        }
+      }
+
+      state = LogoutFailure(errorMessage: errorMessage);
     }
   }
 
@@ -82,7 +121,32 @@ class AuthNotifier extends Notifier<AuthState> {
         state = ChangePasswordFailure(errorMessage: response.status.message);
       }
     } catch (e) {
-      state = ChangePasswordFailure(errorMessage: e.toString());
+      // Provide user-friendly error message
+      String errorMessage = 'Failed to change password. Please try again.';
+
+      if (e is DioException) {
+        switch (e.response?.statusCode) {
+          case 401:
+            errorMessage = 'Current password is incorrect.';
+            break;
+          case 400:
+            errorMessage = 'Invalid password format.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later.';
+            break;
+          default:
+            if (e.type == DioExceptionType.connectionTimeout ||
+                e.type == DioExceptionType.sendTimeout ||
+                e.type == DioExceptionType.receiveTimeout) {
+              errorMessage = 'Connection timeout. Please check your internet.';
+            } else if (e.type == DioExceptionType.connectionError) {
+              errorMessage = 'No internet connection.';
+            }
+        }
+      }
+
+      state = ChangePasswordFailure(errorMessage: errorMessage);
     }
   }
 

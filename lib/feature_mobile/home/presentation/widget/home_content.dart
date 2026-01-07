@@ -19,26 +19,26 @@ class HomeContent extends StatelessWidget {
     final surfaceColor = isDark ? const Color(0xFF1E2936) : Colors.white;
 
     return SafeArea(
-      child: Column(
-        children: [
+      child: CustomScrollView(
+        slivers: [
           // Header
-          _buildHeader(isDark, surfaceColor, name, unitInfo, imageUrl),
+          SliverToBoxAdapter(
+            child: _buildHeader(isDark, surfaceColor, name, unitInfo, imageUrl),
+          ),
 
           // Scrollable Content
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  _buildAnnouncementsSection(isDark, surfaceColor),
-                  const SizedBox(height: 8),
-                  _buildQuickAccessSection(isDark, surfaceColor),
-                  const SizedBox(height: 24),
-                  _buildMyActivitySection(isDark, surfaceColor),
-                  const SizedBox(height: 24),
-                ],
-              ),
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                _buildAnnouncementsSection(isDark, surfaceColor),
+                const SizedBox(height: 8),
+                _buildQuickAccessSection(isDark, surfaceColor),
+                const SizedBox(height: 24),
+                _buildMyActivitySection(isDark, surfaceColor),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
         ],

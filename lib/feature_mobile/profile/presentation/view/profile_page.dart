@@ -4,7 +4,6 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_event.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/widget/logout_button.dart';
@@ -26,9 +25,7 @@ class ProfilePage extends ConsumerWidget {
     // Fetch profile on initial load
     if (profileState is ProfileInitial) {
       Future.microtask(
-        () => ref
-            .read(profileNotifierProvider.notifier)
-            .handleEvent(const FetchProfileEvent()),
+        () => ref.read(profileNotifierProvider.notifier).fetchProfile(),
       );
     }
 
@@ -71,9 +68,7 @@ class ProfilePage extends ConsumerWidget {
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
-          await ref
-              .read(profileNotifierProvider.notifier)
-              .handleEvent(const FetchProfileEvent());
+          await ref.read(profileNotifierProvider.notifier).fetchProfile();
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -143,9 +138,7 @@ class ProfilePage extends ConsumerWidget {
             SizedBox(height: 24.h),
             ElevatedButton.icon(
               onPressed: () {
-                ref
-                    .read(profileNotifierProvider.notifier)
-                    .handleEvent(const FetchProfileEvent());
+                ref.read(profileNotifierProvider.notifier).fetchProfile();
               },
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
