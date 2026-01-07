@@ -4,7 +4,7 @@ import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
 import 'package:ams_mobile/feature_mobile/community/community_page.dart';
-import 'package:ams_mobile/feature_mobile/home/presentation/widget/home_content.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/view/homepage.dart';
 import 'package:ams_mobile/feature_mobile/root/presentation/view/rootScreen.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/view/profile_page.dart';
 import 'package:ams_mobile/feature_mobile/service/service_page.dart';
@@ -46,7 +46,7 @@ class AppRouter {
             path: '/home',
             name: 'home',
             pageBuilder: (context, state) =>
-                NoTransitionPage(child: const HomeContent()),
+                NoTransitionPage(child: const CondoHomePage()),
           ),
           GoRoute(
             path: '/community',

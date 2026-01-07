@@ -2,7 +2,16 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({super.key});
+  final String name;
+  final String unitInfo;
+  final String? imageUrl;
+
+  const HomeContent({
+    super.key,
+    required this.name,
+    required this.unitInfo,
+    this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +22,7 @@ class HomeContent extends StatelessWidget {
       child: Column(
         children: [
           // Header
-          _buildHeader(isDark, surfaceColor),
+          _buildHeader(isDark, surfaceColor, name, unitInfo, imageUrl),
 
           // Scrollable Content
           Expanded(
@@ -37,7 +46,13 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(bool isDark, Color surfaceColor) {
+  Widget _buildHeader(
+    bool isDark,
+    Color surfaceColor,
+    String name,
+    String unitInfo,
+    String? imageUrl,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -64,13 +79,23 @@ class HomeContent extends StatelessWidget {
                     color: isDark ? Colors.grey[700]! : Colors.white,
                     width: 2,
                   ),
-                  image: const DecorationImage(
-                    image: NetworkImage(
-                      'https://lh3.googleusercontent.com/aida-public/AB6AXuAfrP5_FGFDQdCv_MtkmyKRcAYlgaYUUGCb5JGRiK70eVeHzoIuSypr-O89zo-wcuw8eLVwss_ggSAQAMdqjTqCAqZq_FZbzPYLPZcnAGUpf4FDzK0CjV7APWFWhapQm_3Z68-b3VTMDXHgn3sycgwhliNi0esGmsrKWo9k3ShO_hIYmIO6xtrhx877uAMRA2GlXBeEHFnm0qL1zhAyVCeGINZLpSytOEst78KspMj2Z8EiNkAeE9yQaSb6BsaQ084M4CFar5qR40f8',
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+                  image: imageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(imageUrl),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                  color: imageUrl == null
+                      ? (isDark ? Colors.grey[800] : Colors.grey[300])
+                      : null,
                 ),
+                child: imageUrl == null
+                    ? Icon(
+                        Icons.person,
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        size: 24,
+                      )
+                    : null,
               ),
               Positioned(
                 bottom: 0,
@@ -97,7 +122,7 @@ class HomeContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome home, Sarah',
+                  name,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -105,7 +130,7 @@ class HomeContent extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Unit 402 • The Azure Tower',
+                  unitInfo,
                   style: TextStyle(
                     fontSize: 12,
                     color: isDark ? Colors.grey[400] : const Color(0xFF4C739A),

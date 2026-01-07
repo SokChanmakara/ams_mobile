@@ -3,7 +3,15 @@ import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final String name;
+  final String unitInfo;
+  final String? imageUrl;
+  const HomeHeader({
+    super.key,
+    required this.name,
+    required this.unitInfo,
+    this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +37,21 @@ class HomeHeader extends StatelessWidget {
                     color: AppColors.border(context),
                     width: 2,
                   ),
-                  image: const DecorationImage(
-                    image: NetworkImage(
-                      'https://lh3.googleusercontent.com/aida-public/AB6AXuAfrP5_FGFDQdCv_MtkmyKRcAYlgaYUUGCb5JGRiK70eVeHzoIuSypr-O89zo-wcuw8eLVwss_ggSAQAMdqjTqCAqZq_FZbzPYLPZcnAGUpf4FDzK0CjV7APWFWhapQm_3Z68-b3VTMDXHgn3sycgwhliNi0esGmsrKWo9k3ShO_hIYmIO6xtrhx877uAMRA2GlXBeEHFnm0qL1zhAyVCeGINZLpSytOEst78KspMj2Z8EiNkAeE9yQaSb6BsaQ084M4CFar5qR40f8',
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+                  image: imageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(imageUrl!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                  color: imageUrl == null ? AppColors.surface(context) : null,
                 ),
+                child: imageUrl == null
+                    ? Icon(
+                        Icons.person,
+                        color: AppColors.textSecondary(context),
+                        size: 24,
+                      )
+                    : null,
               ),
               Positioned(
                 bottom: 0,
@@ -62,14 +78,14 @@ class HomeHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome home, Sarah',
+                  name,
                   style: AppTextStyles.h5(
                     color: AppColors.textPrimary(context),
                     fontWeight: AppTextStyles.bold,
                   ),
                 ),
                 Text(
-                  'Unit 402 • The Azure Tower',
+                  unitInfo,
                   style: AppTextStyles.caption(
                     color: AppColors.textSecondary(context),
                     fontWeight: AppTextStyles.medium,

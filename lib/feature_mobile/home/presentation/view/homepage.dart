@@ -1,48 +1,40 @@
-import 'package:ams_mobile/feature_mobile/home/presentation/widget/announcements_section.dart';
-import 'package:ams_mobile/feature_mobile/home/presentation/widget/home_bottom_nav_bar.dart';
-import 'package:ams_mobile/feature_mobile/home/presentation/widget/home_header.dart';
-import 'package:ams_mobile/feature_mobile/home/presentation/widget/my_activity_section.dart';
-import 'package:ams_mobile/feature_mobile/home/presentation/widget/quick_access_section.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/widget/home_content.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_event.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CondoHomePage extends StatefulWidget {
+class CondoHomePage extends ConsumerWidget {
   const CondoHomePage({super.key});
 
   @override
-  State<CondoHomePage> createState() => _CondoHomePageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileState = ref.watch(profileNotifierProvider);
 
-class _CondoHomePageState extends State<CondoHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            HomeHeader(),
+    // Trigger fetch once when initial
+    if (profileState is ProfileInitial) {
+      Future.microtask(() {
+        ref
+            .read(profileNotifierProvider.notifier)
+            .handleEvent(const FetchProfileEvent());
+      });
+    }
 
-            // Scrollable Content
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 8),
-                    AnnouncementsSection(),
-                    SizedBox(height: 8),
-                    QuickAccessSection(),
-                    SizedBox(height: 24),
-                    MyActivitySection(),
-                    SizedBox(height: 80),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: HomeBottomNavBar(),
+    if (profileState is ProfileLoading || profileState is ProfileInitial) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (profileState is! ProfileLoaded) {
+      return const SizedBox.shrink();
+    }
+
+    final profile = profileState.userProfile;
+
+    return HomeContent(
+      name: profile.fullName,
+      unitInfo: profile.unitInfo,
+      imageUrl: profile.imageUrl,
     );
   }
 }
