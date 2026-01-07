@@ -31,7 +31,7 @@ class AppColors {
   }
 
   /// Light mode background
-  static const Color backgroundLight = Color(0xFFF6F7F8);
+  static const Color backgroundLight = Color(0xFFFFFFFF);
 
   /// Dark mode background
   static const Color backgroundDark = Color(0xFF101922);

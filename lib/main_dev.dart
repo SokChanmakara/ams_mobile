@@ -51,7 +51,7 @@ void main() async {
   runApp(
     ProviderScope(
       child: DevicePreview(
-        enabled: true, // Set to true to enable DevicePreview
+        enabled: false, // Set to true to enable DevicePreview
         builder: (context) => const MyApp(),
       ),
     ),

@@ -33,75 +33,66 @@ class ShellLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = isDark ? const Color(0xFF1E2936) : Colors.white;
     final selectedIndex = _calculateSelectedIndex(context);
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: _buildBottomNavBar(
-        isDark,
-        surfaceColor,
-        selectedIndex,
-        context,
-      ),
+      bottomNavigationBar: _buildBottomNavBar(selectedIndex, context),
     );
   }
 
-  Widget _buildBottomNavBar(
-    bool isDark,
-    Color surfaceColor,
-    int selectedIndex,
-    BuildContext context,
-  ) {
+  Widget _buildBottomNavBar(int selectedIndex, BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: surfaceColor,
-        border: Border(
+        color: Colors.white.withValues(alpha: 0.9),
+        border: const Border(
           top: BorderSide(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.1)
-                : Colors.grey[200]!,
+            color: Color(0xFFF1F5F9), // slate-100
+            width: 1,
           ),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 6,
+            offset: const Offset(0, -4),
+          ),
+        ],
       ),
       child: SafeArea(
-        child: SizedBox(
-          height: 64,
+        top: false,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
-                isDark,
-                Icons.home,
-                'Home',
-                0,
-                selectedIndex == 0,
-                context,
+                icon: Icons.dashboard,
+                label: 'Home',
+                index: 0,
+                isSelected: selectedIndex == 0,
+                context: context,
               ),
               _buildNavItem(
-                isDark,
-                Icons.wallet_outlined,
-                'Payments',
-                1,
-                selectedIndex == 1,
-                context,
+                icon: Icons.payments_outlined,
+                label: 'Payments',
+                index: 1,
+                isSelected: selectedIndex == 1,
+                context: context,
               ),
               _buildNavItem(
-                isDark,
-                Icons.room_service_sharp,
-                'Services',
-                2,
-                selectedIndex == 2,
-                context,
+                icon: Icons.room_service_sharp,
+                label: 'Services',
+                index: 2,
+                isSelected: selectedIndex == 2,
+                context: context,
               ),
               _buildNavItem(
-                isDark,
-                Icons.person_outline,
-                'Profile',
-                3,
-                selectedIndex == 3,
-                context,
+                icon: Icons.person_outline,
+                label: 'Profile',
+                index: 3,
+                isSelected: selectedIndex == 3,
+                context: context,
               ),
             ],
           ),
@@ -110,36 +101,38 @@ class ShellLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(
-    bool isDark,
-    IconData icon,
-    String label,
-    int index,
-    bool isSelected,
-    BuildContext context,
-  ) {
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    required int index,
+    required bool isSelected,
+    required BuildContext context,
+  }) {
     final color = isSelected
-        ? const Color(0xFF137FEC)
-        : (isDark ? Colors.grey[600] : Colors.grey[400]);
+        ? Theme.of(context).primaryColor
+        : const Color(0xFF94A3B8); // slate-400
 
-    return InkWell(
-      onTap: () => _onItemTapped(index, context),
-      child: SizedBox(
-        width: 80,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: color,
+    return Expanded(
+      child: InkWell(
+        onTap: () => _onItemTapped(index, context),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 26, color: color),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: color,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
