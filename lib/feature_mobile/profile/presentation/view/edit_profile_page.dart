@@ -8,6 +8,10 @@ import 'package:ams_mobile/core/utils/custom_buttons.dart';
 import 'package:ams_mobile/feature_mobile/profile/domain/entities/update_profile_entity.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/edit_profile_page/edit_profile_header.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/edit_profile_page/image_picker_bottom_sheet.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/edit_profile_page/profile_form_section.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/edit_profile_page/profile_picture_section.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
@@ -97,106 +101,7 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
 
   /// Show image picker bottom sheet
   Future<void> _showImagePickerOptions() async {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        final isDark = AppColors.isDark(context);
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface(context),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Handle bar
-                  Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
-                      color: AppColors.textSecondary(
-                        context,
-                      ).withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  // Title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      'Update Profile Picture',
-                      style: AppTextStyles.headlineSmall(
-                        fontWeight: AppTextStyles.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Camera option
-                  ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: AppColors.primary,
-                        size: 24,
-                      ),
-                    ),
-                    title: Text(
-                      'Take Photo',
-                      style: AppTextStyles.bodyLarge(
-                        fontWeight: AppTextStyles.medium,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickImage(ImageSource.camera);
-                    },
-                  ),
-                  // Gallery option
-                  ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.photo_library,
-                        color: AppColors.primary,
-                        size: 24,
-                      ),
-                    ),
-                    title: Text(
-                      'Choose from Gallery',
-                      style: AppTextStyles.bodyLarge(
-                        fontWeight: AppTextStyles.medium,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickImage(ImageSource.gallery);
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    await ImagePickerBottomSheet.show(context, onSourceSelected: _pickImage);
   }
 
   /// Pick image from camera or gallery
@@ -308,7 +213,6 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = AppColors.isDark(context);
     final profileState = ref.watch(profileNotifierProvider);
 
     // Show loading if profile is not loaded
@@ -362,47 +266,7 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
         child: Column(
           children: [
             // Header
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: AppColors.background(context).withValues(alpha: 0.8),
-                border: Border(
-                  bottom: BorderSide(
-                    color: AppColors.divider(context),
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 64,
-                    child: TextButton(
-                      onPressed: () => NavigationService.goBack(),
-                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                      child: Text(
-                        'Cancel',
-                        style: AppTextStyles.bodyLarge(
-                          color: AppColors.textSecondary(context),
-                          fontWeight: AppTextStyles.medium,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Edit Profile',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.headlineSmall(
-                        fontWeight: AppTextStyles.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 64),
-                ],
-              ),
-            ),
+            const EditProfileHeader(),
 
             // Scrollable content
             Expanded(
@@ -410,120 +274,11 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
                 child: Column(
                   children: [
                     // Profile Picture Section
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24, bottom: 16),
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: _isLoading ? null : _showImagePickerOptions,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.primary,
-                                        AppColors.primaryLight,
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    width: 112,
-                                    height: 112,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.background(context),
-                                        width: 4,
-                                      ),
-                                      image: profile.imageUrl.isNotEmpty
-                                          ? DecorationImage(
-                                              image: NetworkImage(
-                                                profile.imageUrl,
-                                              ),
-                                              fit: BoxFit.cover,
-                                            )
-                                          : null,
-                                      color: profile.imageUrl.isEmpty
-                                          ? AppColors.primary
-                                          : null,
-                                    ),
-                                    child: profile.imageUrl.isEmpty
-                                        ? Center(
-                                            child: Text(
-                                              profile.fullName.isNotEmpty
-                                                  ? profile.fullName[0]
-                                                        .toUpperCase()
-                                                  : 'U',
-                                              style: const TextStyle(
-                                                fontSize: 40,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.surface(context),
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.2,
-                                          ),
-                                          blurRadius: 6,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: _isLoading
-                                        ? const SizedBox(
-                                            width: 18,
-                                            height: 18,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                    Colors.white,
-                                                  ),
-                                            ),
-                                          )
-                                        : const Icon(
-                                            Icons.edit,
-                                            size: 18,
-                                            color: Colors.white,
-                                          ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    ProfilePictureSection(
+                      imageUrl: profile.imageUrl,
+                      fullName: profile.fullName,
+                      isLoading: _isLoading,
+                      onTap: _showImagePickerOptions,
                     ),
 
                     // Form sections
@@ -532,45 +287,12 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Personal Information
-                          _buildSectionHeader('PERSONAL INFORMATION', isDark),
-                          const SizedBox(height: 8),
-
-                          _buildCard(
-                            isDark,
-                            children: [
-                              _buildTextField(
-                                label: 'First Name',
-                                controller: _firstNameController,
-                                isDark: isDark,
-                                prefixIcon: Icons.person_outline,
-                                keyboardType: TextInputType.name,
-                              ),
-                              const SizedBox(height: 16),
-                              _buildTextField(
-                                label: 'Last Name',
-                                controller: _lastNameController,
-                                isDark: isDark,
-                                prefixIcon: Icons.person_outline,
-                                keyboardType: TextInputType.name,
-                              ),
-                              const SizedBox(height: 16),
-                              _buildTextField(
-                                label: 'Phone Number',
-                                controller: _phoneController,
-                                isDark: isDark,
-                                prefixIcon: Icons.phone,
-                                keyboardType: TextInputType.phone,
-                              ),
-                              const SizedBox(height: 16),
-                              _buildTextField(
-                                label: 'Email Address',
-                                controller: _emailController,
-                                isDark: isDark,
-                                prefixIcon: Icons.mail_outline,
-                                keyboardType: TextInputType.emailAddress,
-                              ),
-                            ],
+                          // Personal Information Form
+                          ProfileFormSection(
+                            firstNameController: _firstNameController,
+                            lastNameController: _lastNameController,
+                            phoneController: _phoneController,
+                            emailController: _emailController,
                           ),
 
                           const SizedBox(height: 24),
@@ -596,159 +318,6 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title, bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4),
-      child: Text(
-        title,
-        style: AppTextStyles.labelSmall(
-          color: AppColors.textSecondary(context),
-          fontWeight: AppTextStyles.bold,
-        ).copyWith(letterSpacing: 1.2),
-      ),
-    );
-  }
-
-  Widget _buildCard(
-    bool isDark, {
-    required List<Widget> children,
-    EdgeInsets? padding,
-  }) {
-    return Container(
-      padding: padding ?? const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface(context),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadow(context),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(color: AppColors.border(context), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String label,
-    TextEditingController? controller,
-    String? value,
-    required bool isDark,
-    bool enabled = true,
-    bool isFixed = false,
-    IconData? prefixIcon,
-    TextInputType? keyboardType,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.grey[300] : Colors.grey[700],
-              ),
-            ),
-            if (isFixed)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.surface(context),
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: AppColors.border(context)),
-                ),
-                child: Text(
-                  'FIXED',
-                  style: AppTextStyles.labelSmall(
-                    color: AppColors.textSecondary(context),
-                    fontWeight: AppTextStyles.semiBold,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        Opacity(
-          opacity: enabled ? 1.0 : 0.7,
-          child: Stack(
-            children: [
-              TextField(
-                controller: controller,
-                enabled: enabled,
-                keyboardType: keyboardType,
-                style: AppTextStyles.bodyLarge(
-                  color: enabled
-                      ? AppColors.textPrimary(context)
-                      : AppColors.textDisabled(context),
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: enabled
-                      ? AppColors.surface(context)
-                      : AppColors.surfaceElevated(
-                          context,
-                        ).withValues(alpha: 0.5),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.border(context)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.border(context)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppColors.borderFocused,
-                      width: 2,
-                    ),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: prefixIcon != null ? 40 : 12,
-                    vertical: 14,
-                  ),
-                  hintText: value,
-                ),
-              ),
-              if (prefixIcon != null)
-                Positioned(
-                  left: 12,
-                  top: 0,
-                  bottom: 0,
-                  child: Icon(
-                    prefixIcon,
-                    color: AppColors.icon(context),
-                    size: 20,
-                  ),
-                ),
-              if (isFixed)
-                Positioned(
-                  right: 12,
-                  top: 0,
-                  bottom: 0,
-                  child: Icon(
-                    Icons.lock,
-                    color: AppColors.icon(context),
-                    size: 18,
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
