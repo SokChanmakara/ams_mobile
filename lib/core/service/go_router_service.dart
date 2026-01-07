@@ -1,9 +1,10 @@
 import 'package:ams_mobile/core/screens/splash_screen.dart';
 import 'package:ams_mobile/core/service/navigation_service.dart';
+import 'package:ams_mobile/feature_mobile/Payment/payment_page.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
-import 'package:ams_mobile/feature_mobile/community/community_page.dart';
+import 'package:ams_mobile/feature_mobile/Payment/community_page.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/view/homepage.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/view/edit_profile_page.dart';
 import 'package:ams_mobile/feature_mobile/root/presentation/view/rootScreen.dart';
@@ -50,10 +51,10 @@ class AppRouter {
                 NoTransitionPage(child: const CondoHomePage()),
           ),
           GoRoute(
-            path: '/community',
-            name: 'community',
+            path: '/payments',
+            name: 'payments',
             pageBuilder: (context, state) =>
-                NoTransitionPage(child: const CommunityPage()),
+                NoTransitionPage(child: PaymentPage()),
           ),
           GoRoute(
             path: '/services',

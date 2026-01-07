@@ -9,7 +9,7 @@ class ShellLayout extends StatelessWidget {
   // Map navigation indices to route paths
   static const List<String> _navigationRoutes = [
     '/home',
-    '/community',
+    '/payments',
     '/services',
     '/profile',
   ];
@@ -81,15 +81,15 @@ class ShellLayout extends StatelessWidget {
               ),
               _buildNavItem(
                 isDark,
-                Icons.groups_outlined,
-                'Community',
+                Icons.wallet_outlined,
+                'Payments',
                 1,
                 selectedIndex == 1,
                 context,
               ),
               _buildNavItem(
                 isDark,
-                Icons.room_service_outlined,
+                Icons.room_service_sharp,
                 'Services',
                 2,
                 selectedIndex == 2,

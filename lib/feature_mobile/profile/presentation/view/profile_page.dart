@@ -6,11 +6,11 @@ import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provid
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/widget/logout_button.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_header.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_option_item.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_section.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/widget/theme_option_item.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_page/logout_button.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_page/profile_header.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_page/profile_option_item.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_page/profile_section.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_page/theme_option_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -188,18 +188,18 @@ class ProfilePage extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 24.h),
-            ElevatedButton.icon(
-              onPressed: () {
-                NavigationService.navigateTo('/login');
-              },
-              icon: const Icon(Icons.login),
-              label: const Text('Go to Login'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-              ),
-            ),
+            // ElevatedButton.icon(
+            //   onPressed: () {
+            //     NavigationService.navigateTo('/login');
+            //   },
+            //   icon: const Icon(Icons.login),
+            //   label: const Text('Go to Login'),
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: AppColors.primary,
+            //     foregroundColor: Colors.white,
+            //     padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -270,14 +270,6 @@ class ProfilePage extends ConsumerWidget {
                 title: 'Preferences',
                 children: [
                   const ThemeOptionItem(),
-                  ProfileOptionItem(
-                    icon: Icons.notifications_outlined,
-                    title: 'Notifications',
-                    subtitle: 'Manage your alerts',
-                    onTap: () {
-                      // TODO: Navigate to notifications settings
-                    },
-                  ),
                   ProfileOptionItem(
                     icon: Icons.notifications_outlined,
                     title: 'Notifications',

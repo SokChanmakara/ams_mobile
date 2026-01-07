@@ -1,7 +1,11 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_provider.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_state.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/widget/unit_selector_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeContent extends StatelessWidget {
+class HomeContent extends ConsumerWidget {
   final String name;
   final String unitInfo;
   final String? imageUrl;
@@ -14,16 +18,26 @@ class HomeContent extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? const Color(0xFF1E2936) : Colors.white;
+    final unitState = ref.watch(unitNotifierProvider);
 
     return SafeArea(
       child: CustomScrollView(
         slivers: [
           // Header
           SliverToBoxAdapter(
-            child: _buildHeader(isDark, surfaceColor, name, unitInfo, imageUrl),
+            child: _buildHeader(
+              context,
+              ref,
+              isDark,
+              surfaceColor,
+              name,
+              unitInfo,
+              imageUrl,
+              unitState,
+            ),
           ),
 
           // Scrollable Content
@@ -47,11 +61,14 @@ class HomeContent extends StatelessWidget {
   }
 
   Widget _buildHeader(
+    BuildContext context,
+    WidgetRef ref,
     bool isDark,
     Color surfaceColor,
     String name,
     String unitInfo,
     String? imageUrl,
+    UnitState unitState,
   ) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -65,8 +82,10 @@ class HomeContent extends StatelessWidget {
           ),
         ),
       ),
-      child: Row(
+      child: Column(
         children: [
+          Row(
+            children: [
           // Profile Picture with Online Status
           Stack(
             children: [
@@ -180,6 +199,52 @@ class HomeContent extends StatelessWidget {
               ),
             ],
           ),
+            ],
+          ),
+          // Unit Selector Dropdown
+          const SizedBox(height: 16),
+          if (unitState is UnitLoading)
+            Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.primary,
+                ),
+              ),
+            )
+          else if (unitState is UnitLoaded && unitState.units.isNotEmpty)
+            UnitSelectorDropdown(
+              units: unitState.units,
+              selectedUnit: unitState.selectedUnit,
+            )
+          else if (unitState is UnitFailure)
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.error_outline, color: Colors.red, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Failed to load units',
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      ref.read(unitNotifierProvider.notifier).fetchUnits();
+                    },
+                    child: Text('Retry', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

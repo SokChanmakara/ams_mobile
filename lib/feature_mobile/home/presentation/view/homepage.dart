@@ -1,5 +1,7 @@
 import 'package:ams_mobile/core/service/navigation_service.dart';
 import 'package:ams_mobile/core/utils/app_colors.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_provider.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_state.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/widget/home_content.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
@@ -18,12 +20,18 @@ class _CondoHomePageState extends ConsumerState<CondoHomePage> {
   @override
   void initState() {
     super.initState();
-    // Fetch profile once on init
+    // Fetch profile and units once on init
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = ref.read(profileNotifierProvider);
+      final profileState = ref.read(profileNotifierProvider);
       // Fetch profile if not already loaded or if loading
-      if (state is! ProfileLoaded && state is! ProfileLoading) {
+      if (profileState is! ProfileLoaded && profileState is! ProfileLoading) {
         ref.read(profileNotifierProvider.notifier).fetchProfile();
+      }
+
+      // Fetch units
+      final unitState = ref.read(unitNotifierProvider);
+      if (unitState is! UnitLoaded && unitState is! UnitLoading) {
+        ref.read(unitNotifierProvider.notifier).fetchUnits();
       }
     });
   }
@@ -148,19 +156,6 @@ class _CondoHomePageState extends ConsumerState<CondoHomePage> {
                 fontSize: 14,
                 color: AppColors.textSecondary(context),
               ),
-            ),
-          ),
-          SizedBox(height: 24.h),
-          ElevatedButton.icon(
-            onPressed: () {
-              NavigationService.navigateTo('/login');
-            },
-            icon: const Icon(Icons.login),
-            label: const Text('Go to Login'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
             ),
           ),
         ],

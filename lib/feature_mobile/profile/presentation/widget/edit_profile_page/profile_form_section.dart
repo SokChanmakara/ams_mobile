@@ -1,6 +1,6 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
-import 'package:ams_mobile/feature_mobile/profile/presentation/widgets/profile_text_field.dart';
+import 'package:ams_mobile/feature_mobile/profile/presentation/widget/edit_profile_page/profile_text_field.dart';
 import 'package:flutter/material.dart';
 
 class ProfileFormSection extends StatelessWidget {

@@ -6,4 +6,5 @@ class BaseUrl {
   static String refreshToken = '/auth/refresh-token';
   static String userProfile = '/auth/me';
   static String fileUpload = '/files/upload';
+  static String userUnits = '/units';
 }
