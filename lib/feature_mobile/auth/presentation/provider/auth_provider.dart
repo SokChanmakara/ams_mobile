@@ -4,6 +4,7 @@ import 'package:ams_mobile/feature_mobile/auth/domain/use_case/change_password_u
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/forgot_password_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/login_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/logout_use_case.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/reset_password_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/verify_otp_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_notifier.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
@@ -42,6 +43,12 @@ final forgotPasswordUseCaseProvider = Provider<ForgotPasswordUseCase>((ref) {
 final verifyOtpUseCaseProvider = Provider<VerifyOtpUseCase>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return VerifyOtpUseCase(authRepository);
+});
+
+/// Provider for ResetPasswordUseCase
+final resetPasswordUseCaseProvider = Provider<ResetPasswordUseCase>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  return ResetPasswordUseCase(authRepository);
 });
 
 /// Provider for AuthNotifier

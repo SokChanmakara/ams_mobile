@@ -3,20 +3,27 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:ams_mobile/core/utils/custom_buttons.dart';
 import 'package:ams_mobile/core/utils/custom_textfield.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/entities/change_password_entity.dart';
+import 'package:ams_mobile/core/service/navigation_service.dart';
 
-class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+class ChangePasswordScreen extends ConsumerStatefulWidget {
+  const ChangePasswordScreen({super.key});
 
   @override
-  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
+  final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _hasMinLength = false;
   bool _hasSpecialChar = false;
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -33,13 +40,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
   void _handleResetPassword() {
-    if (_newPasswordController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty) {
+    final currentPassword = _currentPasswordController.text.trim();
+    final newPassword = _newPasswordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (currentPassword.isEmpty ||
+        newPassword.isEmpty ||
+        confirmPassword.isEmpty) {
       _showError('Please fill in all fields');
       return;
     }
 
-    if (_newPasswordController.text != _confirmPasswordController.text) {
+    if (newPassword != confirmPassword) {
       _showError('Passwords do not match');
       return;
     }
@@ -49,20 +61,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       return;
     }
 
-    // Simulate API call
-    setState(() => _isLoading = true);
+    // Create change password entity and trigger event
+    final changePasswordEntity = ChangePasswordEntity(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
 
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Password reset successfully!'),
-          backgroundColor: AppColors.success,
-        ),
-      );
-      // Navigate back or to login screen
-      Navigator.of(context).pop();
-    });
+    ref
+        .read(authNotifierProvider.notifier)
+        .handleEvent(
+          ChangePasswordEvent(changePasswordEntity: changePasswordEntity),
+        );
   }
 
   void _showError(String message) {
@@ -73,6 +82,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   void dispose() {
+    _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -80,6 +90,29 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authNotifierProvider);
+
+    // Listen to auth state changes
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next is ChangePasswordSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.message ?? 'Password changed successfully!'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        // Navigate to login page
+        NavigationService.navigateTo('/login');
+      } else if (next is ChangePasswordFailure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    });
+
     return Scaffold(
       backgroundColor: AppColors.background(context),
       body: SafeArea(
@@ -149,6 +182,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                         const SizedBox(height: 32),
 
+                        // Current Password Field
+                        CustomTextField(
+                          label: 'Current Password',
+                          hint: 'Enter current password',
+                          icon: Icons.lock_outline,
+                          controller: _currentPasswordController,
+                          isPassword: true,
+                          textInputAction: TextInputAction.next,
+                        ),
+
+                        const SizedBox(height: 24),
+
                         // New Password Field
                         CustomTextField(
                           label: 'New Password',
@@ -205,11 +250,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                         // Reset Password Button
                         CustomButton(
-                          text: 'Reset Password',
-                          onPressed: _isLoading ? null : _handleResetPassword,
+                          text: 'Change Password',
+                          onPressed: authState is AuthLoading
+                              ? null
+                              : _handleResetPassword,
                           variant: ButtonVariant.primary,
                           size: ButtonSize.medium,
-                          isLoading: _isLoading,
+                          isLoading: authState is AuthLoading,
                           fullWidth: true,
                         ),
                       ],

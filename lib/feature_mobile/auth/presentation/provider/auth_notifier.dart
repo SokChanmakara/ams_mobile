@@ -2,6 +2,7 @@ import 'package:ams_mobile/feature_mobile/auth/domain/use_case/change_password_u
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/forgot_password_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/login_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/logout_use_case.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/reset_password_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/verify_otp_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
@@ -15,6 +16,7 @@ class AuthNotifier extends Notifier<AuthState> {
   late final ChangePasswordUseCase _changePasswordUseCase;
   late final ForgotPasswordUseCase _forgotPasswordUseCase;
   late final VerifyOtpUseCase _verifyOtpUseCase;
+  late final ResetPasswordUseCase _resetPasswordUseCase;
 
   @override
   AuthState build() {
@@ -23,6 +25,7 @@ class AuthNotifier extends Notifier<AuthState> {
     _changePasswordUseCase = ref.read(changePasswordUseCaseProvider);
     _forgotPasswordUseCase = ref.read(forgotPasswordUseCaseProvider);
     _verifyOtpUseCase = ref.read(verifyOtpUseCaseProvider);
+    _resetPasswordUseCase = ref.read(resetPasswordUseCaseProvider);
     return const AuthInitial();
   }
 
@@ -39,6 +42,8 @@ class AuthNotifier extends Notifier<AuthState> {
         await _handleForgotPassword(event);
       case VerifyOtpEvent():
         await _handleVerifyOtp(event);
+      case ResetPasswordWithTokenEvent():
+        await _handleResetPassword(event);
       case ResetAuthEvent():
         _handleReset();
     }
@@ -250,6 +255,50 @@ class AuthNotifier extends Notifier<AuthState> {
       }
 
       state = VerifyOtpFailure(errorMessage: errorMessage);
+    }
+  }
+
+  /// Handle reset password with token event
+  Future<void> _handleResetPassword(ResetPasswordWithTokenEvent event) async {
+    state = const AuthLoading();
+
+    try {
+      final response = await _resetPasswordUseCase.call(
+        ResetPasswordParams(event.resetPasswordEntity),
+      );
+
+      if (response.status.isSuccess) {
+        state = ResetPasswordSuccess(message: response.status.message);
+      } else {
+        state = ResetPasswordFailure(errorMessage: response.status.message);
+      }
+    } catch (e) {
+      // Provide user-friendly error message
+      String errorMessage = 'Failed to reset password. Please try again.';
+
+      if (e is DioException) {
+        switch (e.response?.statusCode) {
+          case 400:
+            errorMessage = 'Invalid or expired reset token.';
+            break;
+          case 404:
+            errorMessage = 'Reset session not found.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later.';
+            break;
+          default:
+            if (e.type == DioExceptionType.connectionTimeout ||
+                e.type == DioExceptionType.sendTimeout ||
+                e.type == DioExceptionType.receiveTimeout) {
+              errorMessage = 'Connection timeout. Please check your internet.';
+            } else if (e.type == DioExceptionType.connectionError) {
+              errorMessage = 'No internet connection.';
+            }
+        }
+      }
+
+      state = ResetPasswordFailure(errorMessage: errorMessage);
     }
   }
 }

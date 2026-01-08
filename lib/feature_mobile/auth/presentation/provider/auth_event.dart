@@ -1,5 +1,6 @@
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/change_password_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/login_entity.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/entities/reset_password_entity.dart';
 
 /// Base class for all auth events
 sealed class AuthEvent {
@@ -43,4 +44,11 @@ class VerifyOtpEvent extends AuthEvent {
   final String otp;
 
   const VerifyOtpEvent({required this.email, required this.otp});
+}
+
+/// Event triggered when user attempts to reset password with token
+class ResetPasswordWithTokenEvent extends AuthEvent {
+  final ResetPasswordEntity resetPasswordEntity;
+
+  const ResetPasswordWithTokenEvent({required this.resetPasswordEntity});
 }

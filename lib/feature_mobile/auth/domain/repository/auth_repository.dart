@@ -1,8 +1,10 @@
 import 'package:ams_mobile/core/models/base_response.dart';
 import 'package:ams_mobile/feature_mobile/auth/data/model/login_response_data.dart';
 import 'package:ams_mobile/feature_mobile/auth/data/model/refresh_token_response_data.dart';
+import 'package:ams_mobile/feature_mobile/auth/data/model/verify_otp_response_data.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/change_password_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/login_entity.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/entities/reset_password_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/verify_otp_entity.dart';
 
 abstract class AuthRepository {
@@ -15,5 +17,8 @@ abstract class AuthRepository {
     String refreshToken,
   );
   Future<BaseResponse> forgotPassword(String email);
-  Future<BaseResponse> verifyOtp(VerifyOtpEntity verifyOtpEntity);
+  Future<BaseResponse<VerifyOtpResponseData>> verifyOtp(
+    VerifyOtpEntity verifyOtpEntity,
+  );
+  Future<BaseResponse> resetPassword(ResetPasswordEntity resetPasswordEntity);
 }

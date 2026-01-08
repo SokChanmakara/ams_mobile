@@ -3,8 +3,10 @@ import 'package:ams_mobile/core/service/base_url.dart';
 import 'package:ams_mobile/core/service/http_service.dart';
 import 'package:ams_mobile/feature_mobile/auth/data/model/login_response_data.dart';
 import 'package:ams_mobile/feature_mobile/auth/data/model/refresh_token_response_data.dart';
+import 'package:ams_mobile/feature_mobile/auth/data/model/verify_otp_response_data.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/change_password_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/login_entity.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/entities/reset_password_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/verify_otp_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/repository/auth_repository.dart';
 import 'package:dio/dio.dart';
@@ -70,10 +72,26 @@ class AuthRepoImp extends AuthRepository {
   }
 
   @override
-  Future<BaseResponse> verifyOtp(VerifyOtpEntity verifyOtpEntity) async {
+  Future<BaseResponse<VerifyOtpResponseData>> verifyOtp(
+    VerifyOtpEntity verifyOtpEntity,
+  ) async {
     final response = await HttpService.instance.post(
       BaseUrl.verifyOTP,
       data: verifyOtpEntity.toJson(),
+    );
+    return BaseResponse<VerifyOtpResponseData>.fromJson(
+      response.data,
+      (json) => VerifyOtpResponseData.fromJson(json as Map<String, dynamic>),
+    );
+  }
+
+  @override
+  Future<BaseResponse> resetPassword(
+    ResetPasswordEntity resetPasswordEntity,
+  ) async {
+    final response = await HttpService.instance.post(
+      BaseUrl.resetPassword,
+      data: resetPasswordEntity.toJson(),
     );
     return BaseResponse.fromJson(response.data, null);
   }

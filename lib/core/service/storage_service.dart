@@ -39,6 +39,7 @@ class StorageService {
   static const String _keyUserName = 'user_name';
   static const String _keyTokenExpiresAt = 'token_expires_at';
   static const String _keyIsAuthenticated = 'is_authenticated';
+  static const String _keyResetPasswordToken = 'reset_password_token';
 
   // ============================================================================
   // THEME SETTINGS
@@ -162,6 +163,21 @@ class StorageService {
     return instance.getBool(_keyIsAuthenticated) ?? false;
   }
 
+  /// Save reset password token
+  static Future<bool> saveResetPasswordToken(String token) async {
+    return await instance.setString(_keyResetPasswordToken, token);
+  }
+
+  /// Get reset password token
+  static String? getResetPasswordToken() {
+    return instance.getString(_keyResetPasswordToken);
+  }
+
+  /// Remove reset password token
+  static Future<bool> removeResetPasswordToken() async {
+    return await instance.remove(_keyResetPasswordToken);
+  }
+
   /// Clear all authentication data
   static Future<void> clearAuthData() async {
     await instance.remove(_keyAccessToken);
@@ -170,6 +186,7 @@ class StorageService {
     await instance.remove(_keyUserEmail);
     await instance.remove(_keyUserName);
     await instance.remove(_keyTokenExpiresAt);
+    await instance.remove(_keyResetPasswordToken);
     await instance.setBool(_keyIsAuthenticated, false);
   }
 

@@ -1,16 +1,17 @@
-class ChangePasswordEntity {
-  final String currentPassword;
+class ResetPasswordEntity {
+  final String token;
   final String newPassword;
   final String confirmNewPassword;
 
-  ChangePasswordEntity({
-    required this.currentPassword,
+  ResetPasswordEntity({
+    required this.token,
     required this.newPassword,
-  }) : confirmNewPassword = newPassword;
+    required this.confirmNewPassword,
+  });
 
   Map<String, dynamic> toJson() {
     return {
-      'currentPassword': currentPassword,
+      'token': token,
       'newPassword': newPassword,
       'confirmNewPassword': confirmNewPassword,
     };

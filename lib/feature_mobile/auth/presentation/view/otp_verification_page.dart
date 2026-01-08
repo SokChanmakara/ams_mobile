@@ -1,3 +1,4 @@
+import 'package:ams_mobile/feature_mobile/auth/presentation/view/reset_password.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:ams_mobile/core/utils/app_colors.dart';
@@ -6,7 +7,6 @@ import 'package:ams_mobile/core/utils/custom_buttons.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
-import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {

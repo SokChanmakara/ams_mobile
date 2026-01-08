@@ -90,3 +90,17 @@ class VerifyOtpFailure extends AuthState {
 
   const VerifyOtpFailure({required this.errorMessage});
 }
+
+/// State when reset password is successful
+class ResetPasswordSuccess extends AuthState {
+  final String? message;
+
+  const ResetPasswordSuccess({this.message});
+}
+
+/// State when reset password fails
+class ResetPasswordFailure extends AuthState {
+  final String errorMessage;
+
+  const ResetPasswordFailure({required this.errorMessage});
+}
