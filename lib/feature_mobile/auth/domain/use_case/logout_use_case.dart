@@ -3,7 +3,6 @@ import 'package:ams_mobile/core/service/http_service.dart';
 import 'package:ams_mobile/core/service/storage_service.dart';
 import 'package:ams_mobile/core/use_case/base_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/repository/auth_repository.dart';
-import 'package:ams_mobile/core/models/base_response.dart' show Status;
 
 class LogoutUseCase implements BaseUseCase<void, NoParams> {
   final AuthRepository authRepository;

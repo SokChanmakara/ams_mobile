@@ -7,14 +7,21 @@ class UserProfile {
   UserProfile({required this.user});
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
-    // The API returns user data directly, not nested in a 'user' field
-    return UserProfile(user: User.fromJson(json));
+    // Handle both direct data (GET /auth/me) and nested 'user' key (PUT /auth/me)
+    final userData = json.containsKey('user')
+        ? json['user'] as Map<String, dynamic>
+        : json;
+    return UserProfile(user: User.fromJson(userData));
   }
 
   Map<String, dynamic> toJson() => user.toJson();
 
   /// Get full name of the user
-  String get fullName => '${user.firstName} ${user.lastName}';
+  String get fullName {
+    final firstName = user.firstName ?? '';
+    final lastName = user.lastName ?? '';
+    return '$firstName $lastName'.trim();
+  }
 
   /// Get user's email
   String get email => user.email;

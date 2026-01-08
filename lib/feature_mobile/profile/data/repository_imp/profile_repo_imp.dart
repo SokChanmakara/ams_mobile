@@ -84,12 +84,7 @@ class ProfileRepoImp extends ProfileRepository {
 
       return BaseResponse<UserProfile>.fromJson(response.data, (json) {
         try {
-          // The update endpoint returns user data nested under "user" key
-          if (json is Map<String, dynamic> && json.containsKey('user')) {
-            final userData = json['user'] as Map<String, dynamic>;
-            return UserProfile.fromJson(userData);
-          }
-          // Fallback: try parsing directly if user key is not present
+          // UserProfile.fromJson handles both nested and direct user data
           return UserProfile.fromJson(json as Map<String, dynamic>);
         } catch (e) {
           print('Error parsing user profile: $e');

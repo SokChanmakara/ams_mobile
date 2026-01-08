@@ -54,6 +54,7 @@ class ProfileFormSection extends StatelessWidget {
             children: [
               ProfileTextField(
                 label: 'First Name',
+                isFixed: true,
                 controller: firstNameController,
                 prefixIcon: Icons.person_outline,
                 keyboardType: TextInputType.name,
@@ -61,6 +62,7 @@ class ProfileFormSection extends StatelessWidget {
               const SizedBox(height: 16),
               ProfileTextField(
                 label: 'Last Name',
+                isFixed: true,
                 controller: lastNameController,
                 prefixIcon: Icons.person_outline,
                 keyboardType: TextInputType.name,

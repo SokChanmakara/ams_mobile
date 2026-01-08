@@ -1,5 +1,6 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
+import 'package:ams_mobile/core/widgets/image_loader.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_provider.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_state.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/widget/unit_selector_dropdown.dart';
@@ -37,33 +38,40 @@ class HomeHeader extends ConsumerWidget {
               // Profile Picture with Online Status
               Stack(
                 children: [
-                  Container(
+                  ImageLoader(
+                    imageUrl: imageUrl.toString(),
                     width: 40,
                     height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.border(context),
-                        width: 2,
-                      ),
-                      image: imageUrl != null
-                          ? DecorationImage(
-                              image: NetworkImage(imageUrl!),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                      color: imageUrl == null
-                          ? AppColors.surface(context)
-                          : null,
-                    ),
-                    child: imageUrl == null
-                        ? Icon(
-                            Icons.person,
-                            color: AppColors.icon(context),
-                            size: 24,
-                          )
-                        : null,
+                    radius: BorderRadius.circular(99),
                   ),
+
+                  // Container(
+                  //   width: 40,
+                  //   height: 40,
+                  //   decoration: BoxDecoration(
+                  //     shape: BoxShape.circle,
+                  //     border: Border.all(
+                  //       color: AppColors.border(context),
+                  //       width: 2,
+                  //     ),
+                  //     image: imageUrl != null
+                  //         ? DecorationImage(
+                  //             image: NetworkImage(imageUrl!),
+                  //             fit: BoxFit.cover,
+                  //           )
+                  //         : null,
+                  //     color: imageUrl == null
+                  //         ? AppColors.surface(context)
+                  //         : null,
+                  //   ),
+                  //   child: imageUrl == null
+                  //       ? Icon(
+                  //           Icons.person,
+                  //           color: AppColors.icon(context),
+                  //           size: 24,
+                  //         )
+                  //       : null,
+                  // ),
                   Positioned(
                     bottom: 0,
                     right: 0,

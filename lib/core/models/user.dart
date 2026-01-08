@@ -1,8 +1,8 @@
 class User {
   final String id;
   final String email;
-  final String firstName;
-  final String lastName;
+  final String? firstName;
+  final String? lastName;
   final String? phone;
   final String clientId;
   final String clientName;
@@ -14,23 +14,23 @@ class User {
   User({
     required this.id,
     required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.phone,
+    this.firstName,
+    this.lastName,
+    this.phone,
     required this.clientId,
     required this.clientName,
     required this.emailVerified,
     required this.lastLoginAt,
-    required this.image,
-    required this.imageUrl,
+    this.image,
+    this.imageUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as String,
       email: json['email'] as String,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
+      firstName: json['firstName'] as String?,
+      lastName: json['lastName'] as String?,
       phone: json['phone'] as String?,
       clientId: json['clientId'] as String,
       clientName: json['clientName'] as String,

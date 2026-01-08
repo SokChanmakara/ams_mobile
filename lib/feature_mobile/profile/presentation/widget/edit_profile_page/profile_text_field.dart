@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ProfileTextField extends StatelessWidget {
   final String label;
   final TextEditingController? controller;
-  final String? value;
+  final String? hintText;
   final bool enabled;
   final bool isFixed;
   final IconData? prefixIcon;
@@ -15,7 +15,7 @@ class ProfileTextField extends StatelessWidget {
     super.key,
     required this.label,
     this.controller,
-    this.value,
+    this.hintText,
     this.enabled = true,
     this.isFixed = false,
     this.prefixIcon,
@@ -25,7 +25,7 @@ class ProfileTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = AppColors.isDark(context);
-
+    final bool isReadOnly = isFixed || !enabled;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -65,7 +65,10 @@ class ProfileTextField extends StatelessWidget {
             children: [
               TextField(
                 controller: controller,
+                readOnly: isReadOnly,
                 enabled: enabled,
+                enableInteractiveSelection: false,
+                contextMenuBuilder: (_, __) => const SizedBox.shrink(),
                 keyboardType: keyboardType,
                 style: AppTextStyles.bodyLarge(
                   color: enabled
@@ -98,7 +101,7 @@ class ProfileTextField extends StatelessWidget {
                     horizontal: prefixIcon != null ? 40 : 12,
                     vertical: 14,
                   ),
-                  hintText: value,
+                  hintText: hintText,
                 ),
               ),
               if (prefixIcon != null)
