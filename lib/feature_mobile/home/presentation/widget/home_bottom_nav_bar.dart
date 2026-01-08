@@ -2,7 +2,14 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class HomeBottomNavBar extends StatelessWidget {
-  const HomeBottomNavBar({super.key});
+  final int selectedIndex;
+  final Function(int) onItemTapped;
+
+  const HomeBottomNavBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onItemTapped,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +24,34 @@ class HomeBottomNavBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(context, Icons.home, 'Home', 0, true),
               _buildNavItem(
-                context,
-                Icons.groups_outlined,
-                'Community',
-                1,
-                false,
+                icon: Icons.home,
+                label: 'Home',
+                index: 0,
+                isSelected: selectedIndex == 0,
+                context: context,
               ),
               _buildNavItem(
-                context,
-                Icons.room_service_outlined,
-                'Services',
-                2,
-                false,
+                icon: Icons.wallet,
+                label: 'Payments',
+                index: 1,
+                isSelected: selectedIndex == 1,
+                context: context,
               ),
-              _buildNavItem(context, Icons.person_outline, 'Profile', 3, false),
+              _buildNavItem(
+                icon: Icons.room_service_outlined,
+                label: 'Services',
+                index: 2,
+                isSelected: selectedIndex == 2,
+                context: context,
+              ),
+              _buildNavItem(
+                icon: Icons.person_outline,
+                label: 'Profile',
+                index: 3,
+                isSelected: selectedIndex == 3,
+                context: context,
+              ),
             ],
           ),
         ),
@@ -40,33 +59,36 @@ class HomeBottomNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(
-    BuildContext context,
-    IconData icon,
-    String label,
-    int index,
-    bool isSelected,
-  ) {
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    required int index,
+    required bool isSelected,
+    required BuildContext context,
+  }) {
     final color = isSelected ? AppColors.primary : AppColors.icon(context);
 
-    return InkWell(
-      onTap: () {},
-      child: SizedBox(
-        width: 80,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: color,
+    return Expanded(
+      child: InkWell(
+        onTap: () => onItemTapped(index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 26, color: color),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: color,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

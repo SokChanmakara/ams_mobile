@@ -14,7 +14,7 @@ class MyActivitySection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'My Activity',
+            'Recent Activity',
             style: AppTextStyles.h4(
               color: AppColors.textPrimary(context),
               fontWeight: AppTextStyles.bold,

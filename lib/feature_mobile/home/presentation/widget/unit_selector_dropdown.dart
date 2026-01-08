@@ -26,28 +26,21 @@ class UnitSelectorDropdown extends ConsumerWidget {
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
             'SELECT PROPERTY',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: isDark ? Colors.grey[500] : const Color(0xFF64748B),
-              letterSpacing: 0.5,
+            style: AppTextStyles.labelMedium(
+              color: AppColors.textSecondary(context),
+              fontWeight: AppTextStyles.semiBold,
             ),
           ),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E2936) : Colors.white,
+            color: AppColors.surface(context),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.1)
-                  : const Color(0xFFE2E8F0),
-              width: 1,
-            ),
+            border: Border.all(color: AppColors.border(context), width: 1),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: AppColors.shadowLight,
                 blurRadius: 2,
                 offset: const Offset(0, 1),
               ),
@@ -59,16 +52,15 @@ class UnitSelectorDropdown extends ConsumerWidget {
               isExpanded: true,
               icon: Icon(
                 Icons.keyboard_arrow_down_rounded,
-                color: isDark ? Colors.grey[400] : AppColors.primary,
+                color: isDark ? AppColors.icon(context) : AppColors.primary,
                 size: 24,
               ),
-              dropdownColor: isDark ? const Color(0xFF1E2936) : Colors.white,
+              dropdownColor: AppColors.surface(context),
               borderRadius: BorderRadius.circular(12),
               isDense: false,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : const Color(0xFF1E293B),
+              style: AppTextStyles.titleMedium(
+                color: AppColors.textPrimary(context),
+                fontWeight: AppTextStyles.semiBold,
               ),
               items: units.map((unit) {
                 return DropdownMenuItem<String>(
@@ -80,8 +72,8 @@ class UnitSelectorDropdown extends ConsumerWidget {
                         height: 8,
                         decoration: BoxDecoration(
                           color: unit.status == 'occupied'
-                              ? Colors.green
-                              : Colors.orange,
+                              ? AppColors.success
+                              : AppColors.warning,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -93,22 +85,16 @@ class UnitSelectorDropdown extends ConsumerWidget {
                           children: [
                             Text(
                               'Unit ${unit.unitNumber}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: isDark
-                                    ? Colors.white
-                                    : const Color(0xFF0D141B),
+                              style: AppTextStyles.titleSmall(
+                                color: AppColors.textPrimary(context),
+                                fontWeight: AppTextStyles.semiBold,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
                               unit.condominium.name,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: isDark
-                                    ? Colors.grey[400]
-                                    : const Color(0xFF4C739A),
+                              style: AppTextStyles.labelSmall(
+                                color: AppColors.textTertiary(context),
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -134,13 +120,11 @@ class UnitSelectorDropdown extends ConsumerWidget {
                       Flexible(
                         child: Text(
                           'Unit ${unit.unitNumber} • ${unit.condominium.name}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                isSelected
-                                    ? (isDark ? Colors.white : const Color(0xFF1E293B))
-                                    : Colors.grey,
+                          style: AppTextStyles.titleMedium(
+                            color: isSelected
+                                ? AppColors.textPrimary(context)
+                                : AppColors.textTertiary(context),
+                            fontWeight: AppTextStyles.semiBold,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
