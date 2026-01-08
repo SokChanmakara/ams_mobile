@@ -5,6 +5,7 @@ import 'package:ams_mobile/feature_mobile/auth/data/model/login_response_data.da
 import 'package:ams_mobile/feature_mobile/auth/data/model/refresh_token_response_data.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/change_password_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/entities/login_entity.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/entities/verify_otp_entity.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/repository/auth_repository.dart';
 import 'package:dio/dio.dart';
 
@@ -57,5 +58,23 @@ class AuthRepoImp extends AuthRepository {
       response.data,
       (json) => RefreshTokenResponseData.fromJson(json as Map<String, dynamic>),
     );
+  }
+
+  @override
+  Future<BaseResponse> forgotPassword(String email) async {
+    final response = await HttpService.instance.post(
+      BaseUrl.forgotPassword,
+      data: {'email': email},
+    );
+    return BaseResponse.fromJson(response.data, null);
+  }
+
+  @override
+  Future<BaseResponse> verifyOtp(VerifyOtpEntity verifyOtpEntity) async {
+    final response = await HttpService.instance.post(
+      BaseUrl.verifyOTP,
+      data: verifyOtpEntity.toJson(),
+    );
+    return BaseResponse.fromJson(response.data, null);
   }
 }

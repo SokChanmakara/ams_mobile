@@ -62,3 +62,31 @@ class ChangePasswordFailure extends AuthState {
 
   const ChangePasswordFailure({required this.errorMessage});
 }
+
+/// State when forgot password is successful
+class ForgotPasswordSuccess extends AuthState {
+  final String? message;
+
+  const ForgotPasswordSuccess({this.message});
+}
+
+/// State when forgot password fails
+class ForgotPasswordFailure extends AuthState {
+  final String errorMessage;
+
+  const ForgotPasswordFailure({required this.errorMessage});
+}
+
+/// State when OTP verification is successful
+class VerifyOtpSuccess extends AuthState {
+  final String? message;
+
+  const VerifyOtpSuccess({this.message});
+}
+
+/// State when OTP verification fails
+class VerifyOtpFailure extends AuthState {
+  final String errorMessage;
+
+  const VerifyOtpFailure({required this.errorMessage});
+}

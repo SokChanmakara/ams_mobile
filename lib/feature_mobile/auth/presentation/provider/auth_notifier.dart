@@ -1,6 +1,8 @@
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/change_password_use_case.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/forgot_password_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/login_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/logout_use_case.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/verify_otp_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
@@ -11,12 +13,16 @@ class AuthNotifier extends Notifier<AuthState> {
   late final LoginUseCase _loginUseCase;
   late final LogoutUseCase _logoutUseCase;
   late final ChangePasswordUseCase _changePasswordUseCase;
+  late final ForgotPasswordUseCase _forgotPasswordUseCase;
+  late final VerifyOtpUseCase _verifyOtpUseCase;
 
   @override
   AuthState build() {
     _loginUseCase = ref.read(loginUseCaseProvider);
     _logoutUseCase = ref.read(logoutUseCaseProvider);
     _changePasswordUseCase = ref.read(changePasswordUseCaseProvider);
+    _forgotPasswordUseCase = ref.read(forgotPasswordUseCaseProvider);
+    _verifyOtpUseCase = ref.read(verifyOtpUseCaseProvider);
     return const AuthInitial();
   }
 
@@ -29,6 +35,10 @@ class AuthNotifier extends Notifier<AuthState> {
         await _handleLogout();
       case ChangePasswordEvent():
         await _handleChangePassword(event);
+      case ForgotPasswordEvent():
+        await _handleForgotPassword(event);
+      case VerifyOtpEvent():
+        await _handleVerifyOtp(event);
       case ResetAuthEvent():
         _handleReset();
     }
@@ -153,5 +163,93 @@ class AuthNotifier extends Notifier<AuthState> {
   /// Reset auth state to initial
   void _handleReset() {
     state = const AuthInitial();
+  }
+
+  /// Handle forgot password event
+  Future<void> _handleForgotPassword(ForgotPasswordEvent event) async {
+    state = const AuthLoading();
+
+    try {
+      final response = await _forgotPasswordUseCase.call(
+        ForgotPasswordParams(event.email),
+      );
+
+      if (response.status.isSuccess) {
+        state = ForgotPasswordSuccess(message: response.status.message);
+      } else {
+        state = ForgotPasswordFailure(errorMessage: response.status.message);
+      }
+    } catch (e) {
+      // Provide user-friendly error message
+      String errorMessage = 'Failed to send reset link. Please try again.';
+
+      if (e is DioException) {
+        switch (e.response?.statusCode) {
+          case 404:
+            errorMessage = 'Email address not found.';
+            break;
+          case 400:
+            errorMessage = 'Invalid email address.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later.';
+            break;
+          default:
+            if (e.type == DioExceptionType.connectionTimeout ||
+                e.type == DioExceptionType.sendTimeout ||
+                e.type == DioExceptionType.receiveTimeout) {
+              errorMessage = 'Connection timeout. Please check your internet.';
+            } else if (e.type == DioExceptionType.connectionError) {
+              errorMessage = 'No internet connection.';
+            }
+        }
+      }
+
+      state = ForgotPasswordFailure(errorMessage: errorMessage);
+    }
+  }
+
+  /// Handle verify OTP event
+  Future<void> _handleVerifyOtp(VerifyOtpEvent event) async {
+    state = const AuthLoading();
+
+    try {
+      final response = await _verifyOtpUseCase.call(
+        VerifyOtpParams(event.email, event.otp),
+      );
+
+      if (response.status.isSuccess) {
+        state = VerifyOtpSuccess(message: response.status.message);
+      } else {
+        state = VerifyOtpFailure(errorMessage: response.status.message);
+      }
+    } catch (e) {
+      // Provide user-friendly error message
+      String errorMessage = 'Failed to verify OTP. Please try again.';
+
+      if (e is DioException) {
+        switch (e.response?.statusCode) {
+          case 400:
+            errorMessage = 'Invalid or expired OTP code.';
+            break;
+          case 404:
+            errorMessage = 'Verification session not found.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later.';
+            break;
+          default:
+            if (e.type == DioExceptionType.connectionTimeout ||
+                e.type == DioExceptionType.sendTimeout ||
+                e.type == DioExceptionType.receiveTimeout) {
+              errorMessage = 'Connection timeout. Please check your internet.';
+            } else if (e.type == DioExceptionType.connectionError) {
+              errorMessage = 'No internet connection.';
+            }
+        }
+      }
+
+      state = VerifyOtpFailure(errorMessage: errorMessage);
+    }
   }
 }

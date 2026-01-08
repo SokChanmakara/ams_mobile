@@ -1,8 +1,10 @@
 import 'package:ams_mobile/feature_mobile/auth/data/repository_imp/auth_repo_imp.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/repository/auth_repository.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/change_password_use_case.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/forgot_password_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/login_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/domain/use_case/logout_use_case.dart';
+import 'package:ams_mobile/feature_mobile/auth/domain/use_case/verify_otp_use_case.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_notifier.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,6 +30,18 @@ final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {
 final changePasswordUseCaseProvider = Provider<ChangePasswordUseCase>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return ChangePasswordUseCase(authRepository);
+});
+
+/// Provider for ForgotPasswordUseCase
+final forgotPasswordUseCaseProvider = Provider<ForgotPasswordUseCase>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  return ForgotPasswordUseCase(authRepository);
+});
+
+/// Provider for VerifyOtpUseCase
+final verifyOtpUseCaseProvider = Provider<VerifyOtpUseCase>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  return VerifyOtpUseCase(authRepository);
 });
 
 /// Provider for AuthNotifier

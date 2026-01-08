@@ -4,7 +4,6 @@ import 'package:ams_mobile/feature_mobile/Payment/payment_page.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
-import 'package:ams_mobile/feature_mobile/Payment/community_page.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/view/homepage.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/view/edit_profile_page.dart';
 import 'package:ams_mobile/feature_mobile/root/presentation/view/rootScreen.dart';
@@ -32,7 +31,7 @@ class AppRouter {
       GoRoute(
         path: '/change-password',
         name: 'change password',
-        builder: (context, state) => const ChangePasswordView(),
+        builder: (context, state) => const ResetPasswordScreen(),
       ),
       GoRoute(
         path: '/forgot-password',

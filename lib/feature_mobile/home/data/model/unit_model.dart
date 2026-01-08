@@ -104,7 +104,9 @@ class UnitModel {
       status: json['status'] as String,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
-      condominium: Condominium.fromJson(json['condominium'] as Map<String, dynamic>),
+      condominium: Condominium.fromJson(
+        json['condominium'] as Map<String, dynamic>,
+      ),
     );
   }
 

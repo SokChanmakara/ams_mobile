@@ -29,3 +29,18 @@ class ChangePasswordEvent extends AuthEvent {
 
   const ChangePasswordEvent({required this.changePasswordEntity});
 }
+
+/// Event triggered when user attempts to reset password via email
+class ForgotPasswordEvent extends AuthEvent {
+  final String email;
+
+  const ForgotPasswordEvent({required this.email});
+}
+
+/// Event triggered when user attempts to verify OTP
+class VerifyOtpEvent extends AuthEvent {
+  final String email;
+  final String otp;
+
+  const VerifyOtpEvent({required this.email, required this.otp});
+}

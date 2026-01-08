@@ -3,16 +3,21 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:ams_mobile/core/utils/custom_buttons.dart';
 import 'package:ams_mobile/core/utils/custom_textfield.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/view/otp_verification_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
+class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -22,20 +27,60 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
-  void _handleSubmit() {
+  void _handleSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
-      // Handle password reset logic here
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Reset link sent to your email'),
-          backgroundColor: AppColors.primary,
-        ),
-      );
+      // Trigger forgot password event
+      ref
+          .read(authNotifierProvider.notifier)
+          .handleEvent(
+            ForgotPasswordEvent(email: _emailController.text.trim()),
+          );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listen to auth state changes
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next is ForgotPasswordSuccess) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.message ?? 'Reset link sent to your email'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // Navigate to OTP verification page and reset the auth state
+        Future.delayed(const Duration(milliseconds: 500), () {
+          ref
+              .read(authNotifierProvider.notifier)
+              .handleEvent(const ResetAuthEvent());
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  OTPVerificationScreen(email: _emailController.text.trim()),
+            ),
+          );
+        });
+      } else if (next is ForgotPasswordFailure) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+        // Reset the auth state after showing the message
+        Future.delayed(const Duration(milliseconds: 500), () {
+          ref
+              .read(authNotifierProvider.notifier)
+              .handleEvent(const ResetAuthEvent());
+        });
+      }
+    });
+
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState is AuthLoading;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -90,11 +135,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                     offset: const Offset(0, 10),
                                   ),
                                 ],
-                                image: const DecorationImage(
-                                  image: NetworkImage(
-                                    'https://lh3.googleusercontent.com/aida-public/AB6AXuDEX3KHtWiCRShg4vM050r26m_gnf8alFF5zEsuhv37saN7qGAJxbHS1YQm9BjSHe3cdfsUn6zFadm7yCIXUzL1qXTrAFHij-_n8rtCWF14CGV-KJn3k638i679TmbATZsR7mDxKZSHv9elw_0yYTiDMfOIKl4hJQLCUSl_qa_Ah3G9jUCV4YQxYpIY0CyxYu6_46AuACJfP4SmF68ggCkjiucfz1ZbgCxyf5hXhL4oKSmNXuKXUdmDMjmhb_49QbAfu15pr4g0egZg',
-                                  ),
-                                  fit: BoxFit.cover,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.email,
+                                  size: 72,
+                                  color: AppColors.primary,
                                 ),
                               ),
                             ),
@@ -160,8 +206,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 // Submit Button
                                 CustomButton(
                                   text: 'Send Reset Link',
-                                  onPressed: _handleSubmit,
+                                  onPressed: isLoading ? null : _handleSubmit,
                                   icon: Icons.send,
+                                  isLoading: isLoading,
                                 ),
                               ],
                             ),

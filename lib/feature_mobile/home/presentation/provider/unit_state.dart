@@ -12,10 +12,7 @@ class UnitLoaded extends UnitState {
 
   UnitLoaded({required this.units, this.selectedUnit});
 
-  UnitLoaded copyWith({
-    List<UnitModel>? units,
-    UnitModel? selectedUnit,
-  }) {
+  UnitLoaded copyWith({List<UnitModel>? units, UnitModel? selectedUnit}) {
     return UnitLoaded(
       units: units ?? this.units,
       selectedUnit: selectedUnit ?? this.selectedUnit,

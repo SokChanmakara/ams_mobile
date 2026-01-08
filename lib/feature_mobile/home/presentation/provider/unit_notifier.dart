@@ -31,9 +31,7 @@ class UnitNotifier extends Notifier<UnitState> {
 
         if (savedUnitId != null) {
           try {
-            selectedUnit = units.firstWhere(
-              (unit) => unit.id == savedUnitId,
-            );
+            selectedUnit = units.firstWhere((unit) => unit.id == savedUnitId);
           } catch (e) {
             selectedUnit = units.isNotEmpty ? units.first : null;
           }
@@ -45,13 +43,17 @@ class UnitNotifier extends Notifier<UnitState> {
 
         // Save the selected unit
         if (selectedUnit != null) {
-          await StorageService.instance.setString(_selectedUnitKey, selectedUnit.id);
+          await StorageService.instance.setString(
+            _selectedUnitKey,
+            selectedUnit.id,
+          );
         }
       } else {
         state = UnitFailure(response.status.message);
       }
     } on DioException catch (e) {
-      final errorMessage = e.response?.data['message'] ?? 'Failed to fetch units';
+      final errorMessage =
+          e.response?.data['message'] ?? 'Failed to fetch units';
       state = UnitFailure(errorMessage);
     } catch (e) {
       state = UnitFailure('An unexpected error occurred');
