@@ -4,11 +4,12 @@ import 'package:ams_mobile/feature_mobile/Payment/payment_page.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/reset_password.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/view/billing_page.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/view/homepage.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/view/edit_profile_page.dart';
 import 'package:ams_mobile/feature_mobile/root/presentation/view/root_screen.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/view/profile_page.dart';
-import 'package:ams_mobile/feature_mobile/service/service_page.dart';
+import 'package:ams_mobile/feature_mobile/condo_service/service_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -72,6 +73,12 @@ class AppRouter {
             name: 'edit-profile',
             pageBuilder: (context, state) =>
                 NoTransitionPage(child: const EditProfilePage()),
+          ),
+          GoRoute(
+            path: '/Bill-Detail',
+            name: 'Bill-Detail',
+            pageBuilder: (context, state) =>
+                NoTransitionPage(child: const BillingPage()),
           ),
         ],
       ),

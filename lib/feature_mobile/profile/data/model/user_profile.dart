@@ -30,7 +30,7 @@ class UserProfile {
   String get imageUrl => user.imageUrl ?? '';
 
   /// Get client/unit information
-  String get unitInfo => user.clientName;
+  String get unitInfo => user.unitNumber ?? '';
 
   String get phone => user.phone ?? '';
 }

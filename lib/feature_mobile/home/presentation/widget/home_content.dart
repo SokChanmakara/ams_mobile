@@ -8,15 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeContent extends ConsumerWidget {
   final String name;
-  final String unitInfo;
   final String? imageUrl;
 
-  const HomeContent({
-    super.key,
-    required this.name,
-    required this.unitInfo,
-    this.imageUrl,
-  });
+  const HomeContent({super.key, required this.name, this.imageUrl});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +23,6 @@ class HomeContent extends ConsumerWidget {
           SliverToBoxAdapter(
             child: HomeHeader(
               name: name,
-              unitInfo: unitInfo,
               imageUrl: imageUrl,
               unitState: unitState,
             ),

@@ -7,6 +7,7 @@ class QuickAccessItem extends StatelessWidget {
   final String label;
   final Color bgColor;
   final Color iconColor;
+  final VoidCallback onTap;
 
   const QuickAccessItem({
     super.key,
@@ -14,6 +15,7 @@ class QuickAccessItem extends StatelessWidget {
     required this.label,
     required this.bgColor,
     required this.iconColor,
+    required this.onTap,
   });
 
   @override
@@ -22,7 +24,7 @@ class QuickAccessItem extends StatelessWidget {
       color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
@@ -30,9 +32,9 @@ class QuickAccessItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: AppColors.shadowLight,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+                color: AppColors.backgroundLight.withValues(alpha: 0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
             ],
           ),

@@ -9,14 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeHeader extends ConsumerWidget {
   final String name;
-  final String unitInfo;
   final String? imageUrl;
   final UnitState unitState;
 
   const HomeHeader({
     super.key,
     required this.name,
-    required this.unitInfo,
     this.imageUrl,
     required this.unitState,
   });
@@ -104,7 +102,10 @@ class HomeHeader extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      unitInfo,
+                      unitState is UnitLoaded &&
+                              (unitState as UnitLoaded).selectedUnit != null
+                          ? 'Unit ${(unitState as UnitLoaded).selectedUnit!.unitNumber}'
+                          : 'No unit selected',
                       style: AppTextStyles.bodySmall(
                         color: AppColors.textSecondary(context),
                         fontWeight: AppTextStyles.medium,

@@ -4,6 +4,7 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_provider.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/provider/profile_state.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/widget/profile_page/logout_button.dart';
@@ -220,8 +221,8 @@ class ProfilePage extends ConsumerWidget {
         // Profile Header with real data
         ProfileHeader(
           name: profile.fullName,
-          unitInfo: profile.unitInfo,
           imageUrl: profile.imageUrl,
+          unitState: ref.watch(unitNotifierProvider),
         ),
 
         SizedBox(height: 32.h),

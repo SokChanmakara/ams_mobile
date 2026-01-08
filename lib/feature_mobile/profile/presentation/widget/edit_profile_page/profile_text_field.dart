@@ -40,22 +40,22 @@ class ProfileTextField extends StatelessWidget {
                 color: isDark ? Colors.grey[300] : Colors.grey[700],
               ),
             ),
-            if (isFixed)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.surface(context),
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: AppColors.border(context)),
-                ),
-                child: Text(
-                  'FIXED',
-                  style: AppTextStyles.labelSmall(
-                    color: AppColors.textSecondary(context),
-                    fontWeight: AppTextStyles.semiBold,
-                  ),
-                ),
-              ),
+            // if (isFixed)
+            //   Container(
+            //     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            //     decoration: BoxDecoration(
+            //       color: AppColors.surface(context),
+            //       borderRadius: BorderRadius.circular(4),
+            //       border: Border.all(color: AppColors.border(context)),
+            //     ),
+            //     child: Text(
+            //       'FIXED',
+            //       style: AppTextStyles.labelSmall(
+            //         color: AppColors.textSecondary(context),
+            //         fontWeight: AppTextStyles.semiBold,
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
         const SizedBox(height: 6),

@@ -1,19 +1,20 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:ams_mobile/core/widgets/image_loader.dart';
+import 'package:ams_mobile/feature_mobile/home/presentation/provider/unit_state.dart';
 import 'package:flutter/material.dart';
 
 /// Profile header widget displaying user avatar, name, and unit info
 class ProfileHeader extends StatelessWidget {
   final String name;
-  final String unitInfo;
   final String? imageUrl;
+  final UnitState unitState;
 
   const ProfileHeader({
     super.key,
     required this.name,
-    required this.unitInfo,
     this.imageUrl,
+    required this.unitState,
   });
 
   @override
@@ -28,7 +29,10 @@ class ProfileHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          unitInfo,
+          unitState is UnitLoaded &&
+                  (unitState as UnitLoaded).selectedUnit != null
+              ? 'Unit ${(unitState as UnitLoaded).selectedUnit!.unitNumber}'
+              : 'No unit selected',
           style: AppTextStyles.bodyMedium(
             color: AppColors.textSecondary(context),
           ),

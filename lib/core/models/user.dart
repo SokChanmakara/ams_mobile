@@ -10,6 +10,7 @@ class User {
   final String lastLoginAt;
   final String? image;
   final String? imageUrl;
+  final String? unitNumber;
 
   User({
     required this.id,
@@ -17,6 +18,7 @@ class User {
     this.firstName,
     this.lastName,
     this.phone,
+    this.unitNumber,
     required this.clientId,
     required this.clientName,
     required this.emailVerified,
@@ -32,6 +34,7 @@ class User {
       firstName: json['firstName'] as String?,
       lastName: json['lastName'] as String?,
       phone: json['phone'] as String?,
+      unitNumber: json['unitNumber'] as String?,
       clientId: json['clientId'] as String,
       clientName: json['clientName'] as String,
       emailVerified: json['emailVerified'] as bool,
@@ -47,6 +50,7 @@ class User {
     'firstName': firstName,
     'lastName': lastName,
     'phone': phone,
+    'unitNumber': unitNumber,
     'clientId': clientId,
     'clientName': clientName,
     'emailVerified': emailVerified,

@@ -65,7 +65,6 @@ class _CondoHomePageState extends ConsumerState<CondoHomePage> {
         },
         child: HomeContent(
           name: profileState.userProfile.fullName,
-          unitInfo: profileState.userProfile.unitInfo,
           imageUrl: profileState.userProfile.imageUrl,
         ),
       ),
