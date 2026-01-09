@@ -39,9 +39,6 @@ class UnitCard extends StatelessWidget {
                   fontWeight: AppTextStyles.bold,
                 ),
               ),
-              SizedBox(height: 4.h),
-
-              Icon(Icons.arrow_drop_down, size: 30),
             ],
           ),
 
