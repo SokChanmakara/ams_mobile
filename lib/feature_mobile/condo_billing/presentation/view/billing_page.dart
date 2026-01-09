@@ -1,13 +1,14 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
-import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/allocated_asset_card.dart';
-import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_header.dart';
-import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/bottom_payment_card.dart';
-import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/fee_breakdown_card.dart';
-import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/quick_action_card.dart';
-import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/unit_card.dart';
+import 'package:ams_mobile/core/utils/custom_buttons.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_header_card.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_pending_bill_card.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_unit_card.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_unit_resource_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// Unit Details & Billing Overview Screen
+/// A modern, clean interface for viewing unit information and pending billings
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
 
@@ -19,30 +20,25 @@ class BillingPage extends StatelessWidget {
         child: Column(
           children: [
             // Header
-            BillingHeader(),
+            BillingHeaderCard(),
 
             // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(20.w),
+                padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 120.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Main Unit Card
-                    UnitCard(),
-                    SizedBox(height: 24.h),
+                    // Unit Information Card
+                    BillingUnitCard(),
+                    SizedBox(height: 32.h),
 
-                    // Quick Actions Grid
-                    QuickActionCard(),
-                    SizedBox(height: 24.h),
+                    // Pending Billings Section
+                    BillingPendingBillCard(),
+                    SizedBox(height: 32.h),
 
-                    // Allocated Assets Section
-                    AllocatedAssetCard(),
-                    SizedBox(height: 24.h),
-
-                    // Fee Breakdown Section
-                    FeeBreakdownCard(),
-                    SizedBox(height: 100.h), // Space for fixed button
+                    // Unit Resources
+                    BillingUnitResourceCard(),
                   ],
                 ),
               ),
@@ -51,8 +47,8 @@ class BillingPage extends StatelessWidget {
         ),
       ),
 
-      // Fixed Bottom Button
-      bottomNavigationBar: BottomPaymentCard(),
+      // Fixed Bottom Payment Button
+      bottomNavigationBar: const BottomPaymentButton(),
     );
   }
 }

@@ -1,5 +1,8 @@
+import 'package:ams_mobile/core/service/navigation_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ams_mobile/core/utils/app_colors.dart';
+import 'package:ams_mobile/core/utils/app_text_styles.dart';
 
 enum ButtonVariant { primary, secondary, outline, text }
 
@@ -251,5 +254,122 @@ class CustomButton extends StatelessWidget {
 
   bool _shouldShowShadow() {
     return variant == ButtonVariant.primary;
+  }
+}
+
+class ResourceButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const ResourceButton({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: AppColors.surface(context),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: AppColors.border(context).withValues(alpha: 0.3),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadowLight,
+              blurRadius: 15,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 22.sp, color: AppColors.primary),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                label,
+                style: AppTextStyles.bodyMedium(
+                  color: AppColors.textPrimary(context),
+                  fontWeight: AppTextStyles.semiBold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BottomPaymentButton extends StatelessWidget {
+  const BottomPaymentButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
+      decoration: BoxDecoration(
+        color: AppColors.surface(context).withValues(alpha: 0.9),
+        border: Border(
+          top: BorderSide(color: AppColors.border(context), width: 1),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Payment Button
+            ElevatedButton(
+              onPressed: () {
+                NavigationService.push('/payments');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF002B5B), // Deep Navy Blue
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                elevation: 4,
+                shadowColor: const Color(0xFF002B5B).withValues(alpha: 0.3),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Pay \$1,060.00 Now',
+                    style: AppTextStyles.buttonLarge(
+                      color: Colors.white,
+                      fontWeight: AppTextStyles.semiBold,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Icon(Icons.arrow_forward, size: 20.sp),
+                ],
+              ),
+            ),
+            SizedBox(height: 12.h),
+
+            // Payment Methods Info
+            Text(
+              'Accepting Bank Transfer & ABA Pay',
+              style: AppTextStyles.labelSmall(
+                color: AppColors.textSecondary(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -54,8 +54,13 @@ class AppRouter {
           GoRoute(
             path: '/payments',
             name: 'payments',
-            pageBuilder: (context, state) =>
-                NoTransitionPage(child: PaymentPage()),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: PaymentPage(
+                invoiceNumber: '1002',
+                amount: '100',
+                description: 'Hello world',
+              ),
+            ),
           ),
           GoRoute(
             path: '/services',
@@ -81,6 +86,7 @@ class AppRouter {
             pageBuilder: (context, state) =>
                 NoTransitionPage(child: const BillingPage()),
           ),
+
           GoRoute(
             path: '/Change-Password',
             name: 'Change-Password',
