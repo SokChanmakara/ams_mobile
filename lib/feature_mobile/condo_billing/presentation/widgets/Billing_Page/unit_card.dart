@@ -26,89 +26,24 @@ class UnitCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Status Badge and Edit Button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Owner Occupied Badge
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: AppColors.successLight,
-                  borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(
-                    color: AppColors.success.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Animated Pulse Dot
-                    SizedBox(
-                      width: 8.w,
-                      height: 8.w,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Pulse animation
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.success.withValues(alpha: 0.4),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          // Solid dot
-                          Container(
-                            width: 8.w,
-                            height: 8.w,
-                            decoration: BoxDecoration(
-                              color: AppColors.success,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      'OWNER OCCUPIED',
-                      style: AppTextStyles.overline(
-                        color: AppColors.successDark,
-                        fontWeight: AppTextStyles.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Edit Button
-              IconButton(
-                onPressed: () {
-                  // Edit action
-                },
-                icon: Icon(Icons.edit_outlined, size: 20.sp),
-                style: IconButton.styleFrom(
-                  foregroundColor: AppColors.textSecondary(context),
-                  backgroundColor: AppColors.isDark(context)
-                      ? AppColors.surfaceDark
-                      : Colors.grey[50],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween),
           SizedBox(height: 20.h),
 
           // Unit Number
-          Text(
-            'Unit 1204',
-            style: AppTextStyles.displaySmall(
-              color: AppColors.textPrimary(context),
-              fontWeight: AppTextStyles.bold,
-            ),
+          Row(
+            children: [
+              Text(
+                'Unit 1204',
+                style: AppTextStyles.displaySmall(
+                  color: AppColors.textPrimary(context),
+                  fontWeight: AppTextStyles.bold,
+                ),
+              ),
+              SizedBox(height: 4.h),
+
+              Icon(Icons.arrow_drop_down, size: 30),
+            ],
           ),
-          SizedBox(height: 4.h),
 
           // Location
           Row(

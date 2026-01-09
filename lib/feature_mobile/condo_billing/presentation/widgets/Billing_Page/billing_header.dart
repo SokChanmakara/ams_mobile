@@ -1,3 +1,4 @@
+import 'package:ams_mobile/core/service/navigation_service.dart';
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class BillingHeader extends StatelessWidget {
         children: [
           // Back Button
           IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => NavigationService.goBack(),
             icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20.sp),
             style: IconButton.styleFrom(
               foregroundColor: AppColors.textSecondary(context),

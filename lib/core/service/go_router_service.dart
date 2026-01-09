@@ -1,6 +1,7 @@
 import 'package:ams_mobile/core/screens/splash_screen.dart';
 import 'package:ams_mobile/core/service/navigation_service.dart';
 import 'package:ams_mobile/feature_mobile/Payment/payment_page.dart';
+import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/reset_password.dart';
@@ -79,6 +80,12 @@ class AppRouter {
             name: 'Bill-Detail',
             pageBuilder: (context, state) =>
                 NoTransitionPage(child: const BillingPage()),
+          ),
+          GoRoute(
+            path: '/Change-Password',
+            name: 'Change-Password',
+            pageBuilder: (context, state) =>
+                NoTransitionPage(child: const ChangePasswordScreen()),
           ),
         ],
       ),

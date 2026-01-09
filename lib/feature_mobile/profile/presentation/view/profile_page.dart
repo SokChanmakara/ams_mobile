@@ -261,6 +261,14 @@ class ProfilePage extends ConsumerWidget {
                       NavigationService.push('/edit-profile');
                     },
                   ),
+                  ProfileOptionItem(
+                    icon: Icons.edit_outlined,
+                    title: 'Change Password',
+                    subtitle: 'Change account Passwords',
+                    onTap: () {
+                      NavigationService.push('/Change-Password');
+                    },
+                  ),
                 ],
               ),
 

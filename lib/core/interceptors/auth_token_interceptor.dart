@@ -2,6 +2,7 @@ import 'package:ams_mobile/core/service/base_url.dart';
 import 'package:ams_mobile/core/service/http_service.dart';
 import 'package:ams_mobile/core/service/storage_service.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 /// Interceptor to handle authentication token refresh automatically
 /// When a 401 Unauthorized response is received, it will attempt to refresh
@@ -32,36 +33,46 @@ class AuthTokenInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    print('🔴 Interceptor caught error: ${err.response?.statusCode}');
+    debugPrint('🔴 Interceptor caught error: ${err.response?.statusCode}');
 
     // Check if the error is 401 Unauthorized
     if (err.response?.statusCode == 401) {
-      print('🔴 Got 401, checking path: ${err.requestOptions.path}');
+      debugPrint('🔴 Got 401, checking path: ${err.requestOptions.path}');
 
-      // Don't try to refresh for refresh token or logout requests
+      // Don't try to refresh for refresh token, logout, or change-password requests
+      // For change-password, 401 means wrong current password, not expired token
       if (err.requestOptions.path == BaseUrl.refreshToken ||
-          err.requestOptions.path == BaseUrl.logout) {
-        print('🔴 This was a refresh token or logout request, clearing auth');
-        // Refresh token is invalid or logout failed, clear auth data
+          err.requestOptions.path == BaseUrl.logout ||
+          err.requestOptions.path == BaseUrl.changePassword) {
+        debugPrint(
+          '🔴 This was a refresh token, logout, or change-password request',
+        );
+        // For change-password, pass the error through without clearing auth
+        if (err.requestOptions.path == BaseUrl.changePassword) {
+          debugPrint('🔴 Change password failed - wrong current password');
+          return handler.next(err);
+        }
+        // For refresh token or logout, clear auth data
+        debugPrint('🔴 Clearing auth data');
         await StorageService.clearAuthData();
         return handler.next(err);
       }
 
       // Try to refresh the token
       final refreshToken = StorageService.getRefreshToken();
-      print(
+      debugPrint(
         '🔴 Refresh token from storage: ${refreshToken != null ? "EXISTS" : "NULL"}',
       );
 
       if (refreshToken == null || refreshToken.isEmpty) {
-        print('🔴 No refresh token, clearing auth');
+        debugPrint('🔴 No refresh token, clearing auth');
         // No refresh token available, clear auth and pass the error
         await StorageService.clearAuthData();
         return handler.next(err);
       }
 
       try {
-        print('🟡 Attempting to refresh token...');
+        debugPrint('🟡 Attempting to refresh token...');
         // Create a new Dio instance for the refresh request to avoid interceptor loops
         final refreshDio = Dio(
           BaseOptions(
@@ -72,13 +83,15 @@ class AuthTokenInterceptor extends Interceptor {
         );
 
         // Make refresh token request
-        print('🟡 Calling: ${_dio.options.baseUrl}${BaseUrl.refreshToken}');
+        debugPrint(
+          '🟡 Calling: ${_dio.options.baseUrl}${BaseUrl.refreshToken}',
+        );
         final response = await refreshDio.post(
           BaseUrl.refreshToken,
           data: {'refreshToken': refreshToken},
         );
 
-        print('🟢 Refresh response: ${response.statusCode}');
+        debugPrint('🟢 Refresh response: ${response.statusCode}');
 
         if (response.statusCode == 200 && response.data != null) {
           // Extract new tokens from response
@@ -89,7 +102,7 @@ class AuthTokenInterceptor extends Interceptor {
           final newRefreshToken = data['refreshToken'] as String;
           final expiresAt = data['expiresAt'] as String;
 
-          print('🟢 Got new tokens, saving...');
+          debugPrint('🟢 Got new tokens, saving...');
 
           // Save the new tokens
           await StorageService.saveAccessToken(newAccessToken);
@@ -104,18 +117,18 @@ class AuthTokenInterceptor extends Interceptor {
             await StorageService.saveUserName(
               '${user['firstName']} ${user['lastName']}',
             );
-            print('🟢 User data updated');
+            debugPrint('🟢 User data updated');
           }
 
           // Update the global HttpService instance with new token
           HttpService.instance.setAuthToken(newAccessToken);
-          print('🟢 Global auth header updated');
+          debugPrint('🟢 Global auth header updated');
 
           // Update the failed request with the new access token
           err.requestOptions.headers['Authorization'] =
               'Bearer $newAccessToken';
 
-          print('🟢 Retrying original request...');
+          debugPrint('🟢 Retrying original request...');
 
           // Retry the original request with new token
           final options = Options(
@@ -130,17 +143,17 @@ class AuthTokenInterceptor extends Interceptor {
             options: options,
           );
 
-          print('🟢 Retry succeeded!');
+          debugPrint('🟢 Retry succeeded!');
           // Return the successful retry response
           return handler.resolve(retryResponse);
         } else {
-          print('🔴 Refresh failed with status: ${response.statusCode}');
+          debugPrint('🔴 Refresh failed with status: ${response.statusCode}');
           // Refresh failed, clear auth data
           await StorageService.clearAuthData();
           return handler.next(err);
         }
       } catch (refreshError) {
-        print('🔴 Refresh error: $refreshError');
+        debugPrint('🔴 Refresh error: $refreshError');
         // Refresh failed, clear auth data
         await StorageService.clearAuthData();
         return handler.next(err);

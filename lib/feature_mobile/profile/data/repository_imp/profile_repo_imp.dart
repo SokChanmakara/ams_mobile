@@ -6,6 +6,7 @@ import 'package:ams_mobile/feature_mobile/profile/data/model/user_profile.dart';
 import 'package:ams_mobile/feature_mobile/profile/domain/entities/update_profile_entity.dart';
 import 'package:ams_mobile/feature_mobile/profile/domain/repository/profile_repository.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfileRepoImp extends ProfileRepository {
   @override
@@ -67,7 +68,7 @@ class ProfileRepoImp extends ProfileRepository {
         (json) => imageUrl,
       );
     } catch (e) {
-      print('Error uploading profile image: $e');
+      debugPrint('Error uploading profile image: $e');
       rethrow;
     }
   }
@@ -87,13 +88,13 @@ class ProfileRepoImp extends ProfileRepository {
           // UserProfile.fromJson handles both nested and direct user data
           return UserProfile.fromJson(json as Map<String, dynamic>);
         } catch (e) {
-          print('Error parsing user profile: $e');
-          print('JSON data: $json');
+          debugPrint('Error parsing user profile: $e');
+          debugPrint('JSON data: $json');
           rethrow;
         }
       });
     } catch (e) {
-      print('Error updating profile: $e');
+      debugPrint('Error updating profile: $e');
       rethrow;
     }
   }

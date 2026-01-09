@@ -24,11 +24,24 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _hasMinLength = false;
   bool _hasSpecialChar = false;
+  String? _currentPasswordError;
+  bool _hasFailedAttempt = false;
 
   @override
   void initState() {
     super.initState();
     _newPasswordController.addListener(_validatePassword);
+    _currentPasswordController.addListener(_onCurrentPasswordChanged);
+  }
+
+  void _onCurrentPasswordChanged() {
+    // Clear error and re-enable button when user modifies current password
+    if (_hasFailedAttempt && _currentPasswordError != null) {
+      setState(() {
+        _currentPasswordError = null;
+        _hasFailedAttempt = false;
+      });
+    }
   }
 
   void _validatePassword() {
@@ -82,6 +95,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   @override
   void dispose() {
+    _currentPasswordController.removeListener(_onCurrentPasswordChanged);
+    _newPasswordController.removeListener(_validatePassword);
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
@@ -101,15 +116,33 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
             backgroundColor: AppColors.success,
           ),
         );
-        // Navigate to login page
+        // Trigger logout to clear session/token
+        ref
+            .read(authNotifierProvider.notifier)
+            .handleEvent(const LogoutEvent());
+      } else if (next is LogoutSuccess) {
+        // After successful logout, navigate to login page
         NavigationService.navigateTo('/login');
       } else if (next is ChangePasswordFailure) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.errorMessage),
-            backgroundColor: AppColors.error,
-          ),
-        );
+        setState(() {
+          // Check if error is related to incorrect current password
+          if (next.errorMessage.toLowerCase().contains('current password') ||
+              next.errorMessage.toLowerCase().contains('incorrect') ||
+              next.errorMessage.toLowerCase().contains('wrong password')) {
+            _currentPasswordError = next.errorMessage;
+            _hasFailedAttempt = true;
+          } else {
+            _currentPasswordError = null;
+            _hasFailedAttempt = false;
+            // Show other errors in snackbar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(next.errorMessage),
+                backgroundColor: AppColors.error,
+              ),
+            );
+          }
+        });
       }
     });
 
@@ -190,6 +223,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                           controller: _currentPasswordController,
                           isPassword: true,
                           textInputAction: TextInputAction.next,
+                          errorText: _currentPasswordError,
                         ),
 
                         const SizedBox(height: 24),
@@ -251,7 +285,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                         // Reset Password Button
                         CustomButton(
                           text: 'Change Password',
-                          onPressed: authState is AuthLoading
+                          onPressed:
+                              (authState is AuthLoading || _hasFailedAttempt)
                               ? null
                               : _handleResetPassword,
                           variant: ButtonVariant.primary,
@@ -259,6 +294,19 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                           isLoading: authState is AuthLoading,
                           fullWidth: true,
                         ),
+
+                        // Show helper text when button is disabled due to failed attempt
+                        if (_hasFailedAttempt && _currentPasswordError != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: Text(
+                              'Please correct your current password to continue',
+                              style: AppTextStyles.bodySmall(
+                                color: AppColors.error,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                       ],
                     ),
                   ),
