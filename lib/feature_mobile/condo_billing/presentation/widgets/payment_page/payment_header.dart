@@ -25,7 +25,7 @@ class PaymentHeader extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => NavigationService.goBack(),
+            onTap: () => NavigationService.goBack(fallback: '/home'),
             child: Container(
               width: 40.w,
               height: 40.w,

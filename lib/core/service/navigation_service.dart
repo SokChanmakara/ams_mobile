@@ -83,10 +83,12 @@ class NavigationService {
 
   /// Go back to the previous route
   /// Example: NavigationService.goBack()
-  static void goBack() {
+  static void goBack({String? fallback}) {
     final ctx = context;
     if (ctx != null && ctx.canPop()) {
       ctx.pop();
+    } else if (fallback != null && ctx != null) {
+      ctx.go(fallback);
     }
   }
 
