@@ -231,7 +231,7 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     final isLoading = authState is AuthLoading;
 
     return Scaffold(
-      backgroundColor: AppColors.background(context),
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -268,6 +268,13 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadowMedium,
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Icon(
                         Icons.mark_email_unread,

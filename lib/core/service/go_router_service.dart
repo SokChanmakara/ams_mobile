@@ -1,11 +1,11 @@
 import 'package:ams_mobile/core/screens/splash_screen.dart';
 import 'package:ams_mobile/core/service/navigation_service.dart';
-import 'package:ams_mobile/feature_mobile/Payment/payment_page.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/change_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/forget_password.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/login.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/view/reset_password.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/view/billing_page.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/view/payment_page.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/view/homepage.dart';
 import 'package:ams_mobile/feature_mobile/profile/presentation/view/edit_profile_page.dart';
 import 'package:ams_mobile/feature_mobile/root/presentation/view/root_screen.dart';

@@ -1,3 +1,4 @@
+import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/feature_mobile/home/presentation/widget/home_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,7 @@ class ShellLayout extends StatelessWidget {
     final selectedIndex = _calculateSelectedIndex(context);
 
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: child,
       bottomNavigationBar: HomeBottomNavBar(
         selectedIndex: selectedIndex,

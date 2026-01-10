@@ -20,12 +20,22 @@ class BillingHeaderCard extends StatelessWidget {
       child: Row(
         children: [
           // Back Button
-          IconButton(
-            onPressed: () => NavigationService.goBack(),
-            icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20.sp),
-            style: IconButton.styleFrom(
-              foregroundColor: AppColors.textSecondary(context),
-              backgroundColor: Colors.transparent,
+          GestureDetector(
+            onTap: () => NavigationService.goBack(),
+            child: Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: BoxDecoration(
+                color: AppColors.isDark(context)
+                    ? AppColors.surfaceDark
+                    : Colors.grey[50],
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                size: 18.sp,
+                color: AppColors.textPrimary(context),
+              ),
             ),
           ),
 

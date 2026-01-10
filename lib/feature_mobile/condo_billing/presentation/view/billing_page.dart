@@ -15,7 +15,7 @@ class BillingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background(context),
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
           children: [

@@ -84,8 +84,9 @@ class PaymentBankSection extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: onOpenBankApp,
-              icon: Icon(Icons.open_in_new, size: 20.sp),
-              label: const Text('Open Banking App'),
+              // icon: Icon(Icons.open_in_new, size: 20.sp),
+              icon: Icon((Icons.payment)),
+              label: const Text('Pay Now'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,

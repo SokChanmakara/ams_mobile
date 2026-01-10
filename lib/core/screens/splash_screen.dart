@@ -1,4 +1,5 @@
 import 'package:ams_mobile/core/service/auth_state_service.dart';
+import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,6 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: Container(
         width: double.infinity,
         height: double.infinity,

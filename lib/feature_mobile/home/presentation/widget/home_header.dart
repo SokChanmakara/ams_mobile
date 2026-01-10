@@ -24,10 +24,11 @@ class HomeHeader extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background(context).withValues(alpha: 0.95),
-        border: Border(
-          bottom: BorderSide(color: AppColors.divider(context), width: 0.5),
-        ),
+        color: AppColors.white,
+        boxShadow: [BoxShadow(color: AppColors.shadowMedium)],
+        // border: Border(
+        //   bottom: BorderSide(color: AppColors.divider(context), width: 0.5),
+        // ),
       ),
       child: Column(
         children: [

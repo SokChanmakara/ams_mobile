@@ -147,7 +147,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.background(context),
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Center(
           child: Container(

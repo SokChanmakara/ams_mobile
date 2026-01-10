@@ -144,7 +144,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.background(context),
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Center(
           child: Container(

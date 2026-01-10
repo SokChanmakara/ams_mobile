@@ -334,7 +334,7 @@ class BottomPaymentButton extends StatelessWidget {
                 NavigationService.push('/payments');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF002B5B), // Deep Navy Blue
+                backgroundColor: AppColors.primary, // Deep Navy Blue
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 shape: RoundedRectangleBorder(

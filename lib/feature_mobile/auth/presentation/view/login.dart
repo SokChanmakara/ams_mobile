@@ -97,7 +97,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: AppColors.background(context),
+        backgroundColor: AppColors.white,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -122,6 +122,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               color: AppColors.primary.withValues(alpha: 0.1),
                               width: 1,
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.shadowMedium,
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
                           child: Icon(
                             Icons.apartment,

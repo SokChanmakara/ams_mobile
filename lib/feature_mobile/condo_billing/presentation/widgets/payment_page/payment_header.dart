@@ -1,3 +1,4 @@
+import 'package:ams_mobile/core/service/navigation_service.dart';
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class PaymentHeader extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pop(context),
+            onTap: () => NavigationService.goBack(),
             child: Container(
               width: 40.w,
               height: 40.w,
