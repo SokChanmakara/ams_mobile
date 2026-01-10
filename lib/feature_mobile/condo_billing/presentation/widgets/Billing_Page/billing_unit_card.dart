@@ -1,11 +1,14 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_unit_item_card.dart';
+import 'package:ams_mobile/feature_mobile/home/data/model/unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BillingUnitCard extends StatelessWidget {
-  const BillingUnitCard({super.key});
+  final UnitModel unit;
+
+  const BillingUnitCard({super.key, required this.unit});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,7 @@ class BillingUnitCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Unit 677',
+                      'Unit ${unit.unitNumber}',
                       style: AppTextStyles.displaySmall(
                         color: AppColors.textPrimary(context),
                         fontWeight: AppTextStyles.bold,
@@ -56,7 +59,7 @@ class BillingUnitCard extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Flexible(
                           child: Text(
-                            'Sunset Tower Updated',
+                            unit.condominium.name,
                             style: AppTextStyles.bodyMedium(
                               color: AppColors.textSecondary(context),
                               fontWeight: AppTextStyles.medium,
@@ -74,16 +77,24 @@ class BillingUnitCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
-                  color: AppColors.successLight,
+                  color: unit.status.toLowerCase() == 'occupied'
+                      ? AppColors.successLight
+                      : AppColors.warningLight,
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
-                    color: AppColors.success.withValues(alpha: 0.2),
+                    color:
+                        (unit.status.toLowerCase() == 'occupied'
+                                ? AppColors.success
+                                : AppColors.warning)
+                            .withValues(alpha: 0.2),
                   ),
                 ),
                 child: Text(
-                  'OCCUPIED',
+                  unit.status.toUpperCase(),
                   style: AppTextStyles.overline(
-                    color: AppColors.successDark,
+                    color: unit.status.toLowerCase() == 'occupied'
+                        ? AppColors.successDark
+                        : AppColors.warningDark,
                     fontWeight: AppTextStyles.bold,
                   ),
                 ),
@@ -103,24 +114,33 @@ class BillingUnitCard extends StatelessWidget {
             children: [
               // Floor
               Expanded(
-                child: BillingUnitItemCard(label: 'FLOOR', value: '100'),
+                child: BillingUnitItemCard(
+                  label: 'FLOOR',
+                  value: unit.floor.toString(),
+                ),
               ),
 
               // Beds
               Expanded(
-                child: BillingUnitItemCard(label: 'BEDS', value: '1 BR'),
+                child: BillingUnitItemCard(
+                  label: 'BEDS',
+                  value: '${unit.bedrooms} BR',
+                ),
               ),
 
               // Baths
               Expanded(
-                child: BillingUnitItemCard(label: 'BATHS', value: '1 BA'),
+                child: BillingUnitItemCard(
+                  label: 'BATHS',
+                  value: '${unit.bathrooms} BA',
+                ),
               ),
 
               // Area
               Expanded(
                 child: BillingUnitItemCard(
                   label: 'AREA',
-                  value: '28',
+                  value: unit.areaSqft,
                   suffix: 'sqft',
                 ),
               ),
