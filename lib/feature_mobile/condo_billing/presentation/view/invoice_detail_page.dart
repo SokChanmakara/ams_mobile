@@ -347,6 +347,7 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
             context,
             MaterialPageRoute(
               builder: (context) => PaymentPage(
+                transactionId: '23',
                 invoiceNumber: invoiceNumber,
                 amount: balanceDue,
                 description: description,

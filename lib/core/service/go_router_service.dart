@@ -57,6 +57,7 @@ class AppRouter {
             pageBuilder: (context, state) => NoTransitionPage(
               child: PaymentPage(
                 invoiceNumber: '1002',
+                transactionId: '1234',
                 amount: '100',
                 description: 'Hello world',
               ),

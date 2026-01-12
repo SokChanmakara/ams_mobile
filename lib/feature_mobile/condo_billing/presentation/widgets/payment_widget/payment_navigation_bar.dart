@@ -1,18 +1,17 @@
 import 'package:ams_mobile/core/service/navigation_service.dart';
-import 'package:ams_mobile/core/utils/app_colors.dart';
-import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ams_mobile/core/utils/app_colors.dart';
+import 'package:ams_mobile/core/utils/app_text_styles.dart';
 
-class PaymentHeader extends StatelessWidget {
-  final String invoiceNumber;
-
-  const PaymentHeader({super.key, required this.invoiceNumber});
+/// Navigation Bar for Payment Page
+class PaymentNavigationBar extends StatelessWidget {
+  const PaymentNavigationBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: AppColors.surface(context),
         border: Border(
@@ -24,6 +23,7 @@ class PaymentHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Back Button
           GestureDetector(
             onTap: () => NavigationService.goBack(fallback: '/home'),
             child: Container(
@@ -42,27 +42,20 @@ class PaymentHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 16.w),
+
+          // Title
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Payment',
-                  style: AppTextStyles.headlineSmall(
-                    color: AppColors.textPrimary(context),
-                    fontWeight: AppTextStyles.bold,
-                  ),
-                ),
-                Text(
-                  invoiceNumber,
-                  style: AppTextStyles.caption(
-                    color: AppColors.textSecondary(context),
-                  ),
-                ),
-              ],
+            child: Text(
+              'Transaction Receipt',
+              textAlign: TextAlign.center,
+              style: AppTextStyles.titleLarge(
+                color: AppColors.textPrimary(context),
+                fontWeight: AppTextStyles.bold,
+              ),
             ),
           ),
+
+          // Share Button (placeholder)
         ],
       ),
     );
