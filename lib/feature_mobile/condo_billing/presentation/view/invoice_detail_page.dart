@@ -5,7 +5,7 @@ import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'payment_page.dart';
 import '../widgets/invoice_detail/payment_status_step_model.dart';
 import '../widgets/invoice_detail/invoice_detail_header.dart';
-import '../widgets/invoice_detail/invoice_status_chip.dart';
+// import '../widgets/invoice_detail/invoice_status_chip.dart';
 import '../widgets/invoice_detail/balance_due_card.dart';
 import '../widgets/invoice_detail/invoice_details_section.dart';
 import '../widgets/invoice_detail/payment_status_timeline.dart';

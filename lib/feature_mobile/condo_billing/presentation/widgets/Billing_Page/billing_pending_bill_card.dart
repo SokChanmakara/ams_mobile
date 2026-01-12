@@ -31,23 +31,36 @@ class BillingPendingBillCard extends ConsumerWidget {
                 ),
               ),
 
-              // Invoice Count Badge
+              // Invoice Count Badge - Show only pending billings count
               if (billingState is BillingLoaded)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.isDark(context)
-                        ? AppColors.surfaceDark
-                        : Colors.grey[50],
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    '${billingState.data.summary.count} Invoice${billingState.data.summary.count != 1 ? 's' : ''}',
-                    style: AppTextStyles.labelSmall(
-                      color: AppColors.primary,
-                      fontWeight: AppTextStyles.semiBold,
-                    ),
-                  ),
+                Builder(
+                  builder: (context) {
+                    final pendingCount = billingState.data.billings
+                        .where(
+                          (billing) =>
+                              billing.status.toLowerCase() == 'pending',
+                        )
+                        .length;
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.isDark(context)
+                            ? AppColors.surfaceDark
+                            : Colors.grey[50],
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Text(
+                        '$pendingCount Invoice${pendingCount != 1 ? 's' : ''}',
+                        style: AppTextStyles.labelSmall(
+                          color: AppColors.primary,
+                          fontWeight: AppTextStyles.semiBold,
+                        ),
+                      ),
+                    );
+                  },
                 ),
             ],
           ),
@@ -112,85 +125,106 @@ class BillingPendingBillCard extends ConsumerWidget {
 
         // Loaded State with Data
         if (billingState is BillingLoaded) ...[
-          // Total Outstanding Card
-          Container(
-            padding: EdgeInsets.all(24.w),
-            margin: EdgeInsets.only(bottom: 16.h),
-            decoration: BoxDecoration(
-              color: AppColors.surface(context),
-              borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(
-                color: AppColors.border(context).withValues(alpha: 0.3),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.shadowLight,
-                  blurRadius: 15,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Total Amount
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Outstanding',
-                      style: AppTextStyles.caption(
-                        color: AppColors.textSecondary(context),
-                        fontWeight: AppTextStyles.medium,
-                      ),
+          // Total Outstanding Card - Calculate only for pending billings
+          Builder(
+            builder: (context) {
+              final pendingBillings = billingState.data.billings
+                  .where((billing) => billing.status.toLowerCase() == 'pending')
+                  .toList();
+
+              final totalPendingOutstanding = pendingBillings.fold<double>(
+                0.0,
+                (sum, billing) {
+                  final amount = double.tryParse(billing.balanceAmount) ?? 0.0;
+                  return sum + amount;
+                },
+              );
+
+              return Container(
+                padding: EdgeInsets.all(24.w),
+                margin: EdgeInsets.only(bottom: 16.h),
+                decoration: BoxDecoration(
+                  color: AppColors.surface(context),
+                  borderRadius: BorderRadius.circular(24.r),
+                  border: Border.all(
+                    color: AppColors.border(context).withValues(alpha: 0.3),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.shadowLight,
+                      blurRadius: 15,
+                      offset: const Offset(0, 2),
                     ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      billingState.data.formattedTotalOutstanding,
-                      style: AppTextStyles.displaySmall(
-                        color: AppColors.textPrimary(context),
-                        fontWeight: AppTextStyles.bold,
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Total Amount
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Total Outstanding',
+                          style: AppTextStyles.caption(
+                            color: AppColors.textSecondary(context),
+                            fontWeight: AppTextStyles.medium,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          '\$${totalPendingOutstanding.toStringAsFixed(2)}',
+                          style: AppTextStyles.displaySmall(
+                            color: AppColors.textPrimary(context),
+                            fontWeight: AppTextStyles.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Icon
+                    Container(
+                      width: 48.w,
+                      height: 48.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.isDark(context)
+                            ? AppColors.surfaceDark
+                            : Colors.grey[50],
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      child: Icon(
+                        Icons.account_balance_wallet_outlined,
+                        size: 28.sp,
+                        color: AppColors.primary,
                       ),
                     ),
                   ],
                 ),
-
-                // Icon
-                Container(
-                  width: 48.w,
-                  height: 48.w,
-                  decoration: BoxDecoration(
-                    color: AppColors.isDark(context)
-                        ? AppColors.surfaceDark
-                        : Colors.grey[50],
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Icon(
-                    Icons.account_balance_wallet_outlined,
-                    size: 28.sp,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
 
-          // Invoice List
-          if (billingState.data.billings.isNotEmpty)
+          // Invoice List - Filter to show only pending billings
+          if (billingState.data.billings
+              .where((billing) => billing.status.toLowerCase() == 'pending')
+              .isNotEmpty)
             Column(
-              children: billingState.data.billings.map((billing) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  child: BillingInvoiceItemCard(
-                    icon: billing.billingTypeIcon,
-                    invoiceNumber: billing.invoiceNumber,
-                    description:
-                        '${billing.description} • ${_formatDate(billing.billingDate)}',
-                    amount: billing.formattedBalanceAmount,
-                    billingId: billing.id,
-                  ),
-                );
-              }).toList(),
+              children: billingState.data.billings
+                  .where((billing) => billing.status.toLowerCase() == 'pending')
+                  .map((billing) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: BillingInvoiceItemCard(
+                        icon: billing.billingTypeIcon,
+                        invoiceNumber: billing.invoiceNumber,
+                        description:
+                            '${billing.description} • ${_formatDate(billing.billingDate)}',
+                        amount: billing.formattedBalanceAmount,
+                        billingId: billing.id,
+                      ),
+                    );
+                  })
+                  .toList(),
             )
           else
             Container(
