@@ -187,6 +187,7 @@ class BillingPendingBillCard extends ConsumerWidget {
                     description:
                         '${billing.description} • ${_formatDate(billing.billingDate)}',
                     amount: billing.formattedBalanceAmount,
+                    billingId: billing.id,
                   ),
                 );
               }).toList(),

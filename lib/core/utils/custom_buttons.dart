@@ -358,15 +358,6 @@ class BottomPaymentButton extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 12.h),
-
-            // Payment Methods Info
-            Text(
-              'Accepting Bank Transfer & ABA Pay',
-              style: AppTextStyles.labelSmall(
-                color: AppColors.textSecondary(context),
-              ),
-            ),
           ],
         ),
       ),

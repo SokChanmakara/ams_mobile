@@ -1,5 +1,6 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/view/invoice_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,19 +9,26 @@ class BillingInvoiceItemCard extends StatelessWidget {
   final String invoiceNumber;
   final String description;
   final String amount;
+  final String billingId;
   const BillingInvoiceItemCard({
     super.key,
     required this.icon,
     required this.invoiceNumber,
     required this.description,
     required this.amount,
+    required this.billingId,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigate to invoice details
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InvoiceDetailPage(billingId: billingId),
+          ),
+        );
       },
       borderRadius: BorderRadius.circular(16.r),
       child: Container(
