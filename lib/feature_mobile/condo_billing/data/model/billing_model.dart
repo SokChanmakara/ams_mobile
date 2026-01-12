@@ -46,14 +46,14 @@ class BillingModel {
   final String? paymentReference;
   final String? paymentDate;
   final String? settlementDate;
-  final String sentDate;
+  final String? sentDate;
   final int reminderCount;
   final String? lastReminderDate;
   final String notes;
   final String? internalNotes;
   final String createdBy;
-  final String approvedBy;
-  final String approvedAt;
+  final String? approvedBy;
+  final String? approvedAt;
   final String createdAt;
   final String updatedAt;
   final UnitModel unit;
@@ -86,14 +86,14 @@ class BillingModel {
     this.paymentReference,
     this.paymentDate,
     this.settlementDate,
-    required this.sentDate,
+    this.sentDate,
     required this.reminderCount,
     this.lastReminderDate,
     required this.notes,
     this.internalNotes,
     required this.createdBy,
-    required this.approvedBy,
-    required this.approvedAt,
+    this.approvedBy,
+    this.approvedAt,
     required this.createdAt,
     required this.updatedAt,
     required this.unit,
@@ -128,14 +128,14 @@ class BillingModel {
       paymentReference: json['paymentReference'] as String?,
       paymentDate: json['paymentDate'] as String?,
       settlementDate: json['settlementDate'] as String?,
-      sentDate: json['sentDate'] as String,
+      sentDate: json['sentDate'] as String?,
       reminderCount: json['reminderCount'] as int,
       lastReminderDate: json['lastReminderDate'] as String?,
       notes: json['notes'] as String,
       internalNotes: json['internalNotes'] as String?,
       createdBy: json['createdBy'] as String,
-      approvedBy: json['approvedBy'] as String,
-      approvedAt: json['approvedAt'] as String,
+      approvedBy: json['approvedBy'] as String?,
+      approvedAt: json['approvedAt'] as String?,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       unit: UnitModel.fromJson(json['unit'] as Map<String, dynamic>),

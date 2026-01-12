@@ -9,6 +9,5 @@ class BaseUrl {
   static String userProfile = '/auth/me';
   static String fileUpload = '/files/upload';
   static String userUnits = '/units';
-  static String billingPending = '/billing-payments/pending-billings';
   static String pendingBillings = '/billing-payments/pending-billings';
 }
