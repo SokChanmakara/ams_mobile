@@ -55,7 +55,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter username and password')),
+        SnackBar(
+          content: Text(
+            'Please enter username and password',
+            style: AppTextStyles.bodyMedium(color: Colors.white),
+          ),
+          backgroundColor: AppColors.error,
+        ),
       );
       return;
     }
@@ -74,19 +80,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     // Listen to auth state changes
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
       if (next is LoginSuccess) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text(next.message ?? 'Login successful!'),
-        //     backgroundColor: Colors.green,
-        //   ),
-        // );
         _saveUsername(_emailController.text.trim());
         NavigationService.navigateTo('/home');
       } else if (next is LoginFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.errorMessage),
-            backgroundColor: Colors.red,
+            content: Text(
+              next.errorMessage,
+              style: AppTextStyles.bodyMedium(color: Colors.white),
+            ),
+            backgroundColor: AppColors.error,
           ),
         );
       }
@@ -97,7 +100,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.background(context),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -116,10 +119,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1),
+                            color: AppColors.primarySurfaceLight,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: AppColors.primary.withValues(alpha: 0.1),
+                              color: AppColors.withOpacity(
+                                AppColors.primary,
+                                0.1,
+                              ),
                               width: 1,
                             ),
                             boxShadow: [
@@ -166,13 +172,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Email Field
+                        // Username Field
                         CustomTextField(
                           label: 'Username',
                           hint: 'Johndoe',
-                          icon: Icons.people,
+                          icon: Icons.person_outline,
                           controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
                         ),
 
                         const SizedBox(height: 20),
@@ -184,6 +191,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           icon: Icons.lock_outline,
                           controller: _passwordController,
                           isPassword: true,
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) {
+                            if (authState is! AuthLoading) {
+                              _handleLogin();
+                            }
+                          },
                         ),
 
                         // Forgot Password Link
@@ -204,8 +217,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                         // Login Button
                         CustomButton(
-                          text: 'Log In',
-                          icon: Icons.arrow_forward,
+                          text: 'Login',
+                          // icon: Icons.arrow_forward,
                           onPressed: authState is AuthLoading
                               ? null
                               : _handleLogin,
@@ -233,6 +246,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           fullWidth: false,
                           onPressed: () {
                             // Handle contact admin
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Please contact your property administrator',
+                                  style: AppTextStyles.bodyMedium(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                backgroundColor: AppColors.info,
+                              ),
+                            );
                           },
                         ),
                       ],

@@ -24,7 +24,7 @@ class HomeHeader extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.surface(context),
         boxShadow: [BoxShadow(color: AppColors.shadowMedium)],
         // border: Border(
         //   bottom: BorderSide(color: AppColors.divider(context), width: 0.5),

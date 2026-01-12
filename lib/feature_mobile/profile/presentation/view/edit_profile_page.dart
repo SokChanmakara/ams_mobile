@@ -218,7 +218,7 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
     // Show loading if profile is not loaded
     if (profileState is! ProfileLoaded) {
       return Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.background(context),
         body: SafeArea(
           child: Column(
             children: [
@@ -263,7 +263,7 @@ class _EditResidentProfilePageState extends ConsumerState<EditProfilePage> {
     final profile = profileState.userProfile;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Column(
           children: [

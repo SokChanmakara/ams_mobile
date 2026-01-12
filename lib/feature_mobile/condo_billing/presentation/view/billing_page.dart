@@ -56,7 +56,7 @@ class _BillingPageState extends ConsumerState<BillingPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Column(
           children: [

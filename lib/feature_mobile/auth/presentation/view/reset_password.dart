@@ -9,6 +9,7 @@ import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -144,7 +145,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Center(
           child: Container(
@@ -152,11 +153,11 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             child: Column(
               children: [
                 // Status Bar Spacing
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
 
                 // Top App Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Row(
                     children: [
                       // Back Button
@@ -166,13 +167,13 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           onTap: () => Navigator.of(context).pop(),
                           borderRadius: BorderRadius.circular(9999),
                           child: Container(
-                            width: 40,
-                            height: 40,
+                            width: 40.w,
+                            height: 40.h,
                             alignment: Alignment.center,
                             child: Icon(
                               Icons.arrow_back_ios_new,
                               color: AppColors.textPrimary(context),
-                              size: 24,
+                              size: 24.sp,
                             ),
                           ),
                         ),
@@ -191,23 +192,23 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                       ),
 
                       // Spacer for alignment
-                      const SizedBox(width: 40),
+                      SizedBox(width: 40.w),
                     ],
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
 
                 // Scrollable Content
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+                    padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
                     child: Column(
                       children: [
                         // Hero Icon
                         Container(
-                          width: 64,
-                          height: 64,
+                          width: 64.w,
+                          height: 64.h,
                           decoration: BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
@@ -215,11 +216,11 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           child: Icon(
                             Icons.lock_reset,
                             color: AppColors.primary,
-                            size: 32,
+                            size: 32.sp,
                           ),
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
 
                         // Title and Description
                         Text(
@@ -231,10 +232,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           textAlign: TextAlign.center,
                         ),
 
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
 
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
                           child: Text(
                             'Please create a secure password including numbers and symbols for your unit account.',
                             style: AppTextStyles.bodyMedium(
@@ -244,7 +245,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           ),
                         ),
 
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32.h),
 
                         // New Password Field
                         _PasswordField(
@@ -260,7 +261,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           },
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
 
                         // Confirm Password Field
                         _PasswordField(
@@ -277,7 +278,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           },
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
 
                         // Password Strength Indicator
                         _PasswordStrengthIndicator(
@@ -292,7 +293,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
                 // Bottom Action Button
                 Container(
-                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
+                  padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 40.h),
                   color: AppColors.background(context),
                   child: CustomButton(
                     text: 'Reset Password',
@@ -340,7 +341,7 @@ class _PasswordField extends StatelessWidget {
       children: [
         // Label
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
           child: Text(
             label,
             style: AppTextStyles.bodyMedium(
@@ -352,22 +353,16 @@ class _PasswordField extends StatelessWidget {
 
         // Input Field
         Container(
-          height: 56,
+          height: 56.h,
           decoration: BoxDecoration(
-            color: AppColors.isDark(context)
-                ? AppColors.white.withValues(alpha: 0.05)
-                : AppColors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.isDark(context)
-                  ? AppColors.white.withValues(alpha: 0.1)
-                  : AppColors.border(context),
-            ),
+            color: AppColors.surface(context),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: AppColors.border(context)),
             boxShadow: [
               BoxShadow(
                 color: AppColors.shadowLight,
-                blurRadius: 14,
-                offset: const Offset(0, 4),
+                blurRadius: 14.r,
+                offset: Offset(0, 4.h),
               ),
             ],
           ),
@@ -385,7 +380,7 @@ class _PasswordField extends StatelessWidget {
               prefixIcon: Icon(
                 icon,
                 color: AppColors.textSecondary(context),
-                size: 20,
+                size: 20.sp,
               ),
               suffixIcon: IconButton(
                 onPressed: onVisibilityToggle,
@@ -394,13 +389,13 @@ class _PasswordField extends StatelessWidget {
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
                   color: AppColors.textSecondary(context),
-                  size: 22,
+                  size: 22.sp,
                 ),
               ),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 16.h,
               ),
             ),
           ),
@@ -429,7 +424,7 @@ class _PasswordStrengthIndicator extends StatelessWidget {
       children: [
         // Label
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 12),
+          padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
           child: Text(
             'PASSWORD STRENGTH',
             style: AppTextStyles.labelSmall(
@@ -445,8 +440,8 @@ class _PasswordStrengthIndicator extends StatelessWidget {
             final isActive = index < strength;
             return Expanded(
               child: Container(
-                height: 6,
-                margin: EdgeInsets.only(right: index < 1 ? 8 : 0),
+                height: 6.h,
+                margin: EdgeInsets.only(right: index < 1 ? 8.w : 0),
                 decoration: BoxDecoration(
                   color: isActive
                       ? AppColors.primary
@@ -458,7 +453,7 @@ class _PasswordStrengthIndicator extends StatelessWidget {
           }),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
 
         // Requirements List
         Column(
@@ -467,7 +462,7 @@ class _PasswordStrengthIndicator extends StatelessWidget {
               text: 'Must be at least 8 characters',
               isMet: hasMinLength,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             _RequirementItem(
               text: 'Include at least one number',
               isMet: hasNumber,
@@ -492,14 +487,14 @@ class _RequirementItem extends StatelessWidget {
       children: [
         Icon(
           isMet ? Icons.check_circle : Icons.radio_button_unchecked,
-          size: 16,
+          size: 16.sp,
           color: isMet
               ? AppColors.success
               : (AppColors.isDark(context)
                     ? AppColors.textDisabled(context)
                     : const Color(0xFFD1D5DB)),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8.w),
         Text(
           text,
           style: AppTextStyles.bodyMedium(

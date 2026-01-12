@@ -39,7 +39,7 @@ class QuickAccessSection extends StatelessWidget {
               ),
               QuickAccessItem(
                 icon: Icons.build_outlined,
-                label: 'Report Issue',
+                label: 'Report',
                 onTap: () {},
                 bgColor: AppColors.shadowLight,
                 iconColor: AppColors.primary,

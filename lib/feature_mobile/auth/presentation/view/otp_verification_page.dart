@@ -8,6 +8,8 @@ import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_event.
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_provider.dart';
 import 'package:ams_mobile/feature_mobile/auth/presentation/provider/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pinput/pinput.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,11 +59,8 @@ class OTPVerificationScreen extends ConsumerStatefulWidget {
 }
 
 class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
-  final List<TextEditingController> _controllers = List.generate(
-    6,
-    (index) => TextEditingController(),
-  );
-  final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  final TextEditingController _pinController = TextEditingController();
+  final FocusNode _pinFocusNode = FocusNode();
 
   int _remainingSeconds = 45;
   Timer? _timer;
@@ -92,36 +91,8 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     });
   }
 
-  void _onNumberPressed(String number) {
-    // Find the first empty field or the focused field
-    for (int i = 0; i < _controllers.length; i++) {
-      if (_controllers[i].text.isEmpty) {
-        setState(() {
-          _controllers[i].text = number;
-        });
-        if (i < _controllers.length - 1) {
-          _focusNodes[i + 1].requestFocus();
-        }
-        break;
-      }
-    }
-  }
-
-  void _onBackspace() {
-    // Find the last filled field and clear it
-    for (int i = _controllers.length - 1; i >= 0; i--) {
-      if (_controllers[i].text.isNotEmpty) {
-        setState(() {
-          _controllers[i].text = '';
-        });
-        _focusNodes[i].requestFocus();
-        break;
-      }
-    }
-  }
-
   void _onVerify() {
-    String otp = _controllers.map((c) => c.text).join();
+    String otp = _pinController.text;
     if (otp.length == 6) {
       // Trigger verify OTP event
       ref
@@ -150,12 +121,8 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
   @override
   void dispose() {
     _timer?.cancel();
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
+    _pinController.dispose();
+    _pinFocusNode.dispose();
     super.dispose();
   }
 
@@ -230,166 +197,213 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     final authState = ref.watch(authNotifierProvider);
     final isLoading = authState is AuthLoading;
 
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.arrow_back_ios_new),
-                    iconSize: 24,
-                    style: IconButton.styleFrom(
-                      foregroundColor: AppColors.textPrimary(context),
-                    ),
-                  ),
-                  const SizedBox(width: 48),
-                ],
-              ),
-            ),
-
-            // Main Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.background(context),
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Header
+              Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(height: 16),
-
-                    // Hero Icon
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadowMedium,
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.mark_email_unread,
-                        size: 64,
-                        color: AppColors.primary,
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.arrow_back_ios_new),
+                      iconSize: 24.sp,
+                      style: IconButton.styleFrom(
+                        foregroundColor: AppColors.textPrimary(context),
                       ),
                     ),
-
-                    const SizedBox(height: 32),
-
-                    // Title
-                    Text(
-                      'Verification',
-                      style: AppTextStyles.displaySmall(
-                        color: AppColors.textPrimary(context),
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    // Subtitle
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: AppTextStyles.bodyLarge(
-                          color: AppColors.textSecondary(context),
-                        ),
-                        children: [
-                          const TextSpan(
-                            text: 'Enter the 6-digit code sent to\n',
-                          ),
-                          TextSpan(
-                            text: widget.email,
-                            style: AppTextStyles.bodyLarge(
-                              color: AppColors.textPrimary(context),
-                              fontWeight: AppTextStyles.semiBold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 40),
-
-                    // OTP Input Fields - Updated to 6 digits
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        6,
-                        (index) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          child: _OTPInputField(
-                            controller: _controllers[index],
-                            focusNode: _focusNodes[index],
-                            onChanged: (value) {
-                              if (value.isNotEmpty && index < 5) {
-                                _focusNodes[index + 1].requestFocus();
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 40),
-
-                    // Timer & Resend
-                    Column(
-                      children: [
-                        Text(
-                          'Resend code in ${_formatTime(_remainingSeconds)}',
-                          style: AppTextStyles.bodyMedium(
-                            color: AppColors.textTertiary(context),
-                            fontWeight: AppTextStyles.medium,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextButton(
-                          onPressed: _canResend ? _onResend : null,
-                          child: Text(
-                            'Resend Code',
-                            style: AppTextStyles.bodyMedium(
-                              color: _canResend
-                                  ? AppColors.primary
-                                  : AppColors.primary.withValues(alpha: 0.5),
-                              fontWeight: AppTextStyles.semiBold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // Verify Button using CustomButton
-                    CustomButton(
-                      text: 'Verify',
-                      onPressed: isLoading ? null : _onVerify,
-                      size: ButtonSize.large,
-                      borderRadius: 16,
-                      isLoading: isLoading,
-                    ),
-
-                    const SizedBox(height: 16),
+                    SizedBox(width: 48.w),
                   ],
                 ),
               ),
-            ),
 
-            // Numeric Keypad
-            _NumericKeypad(
-              onNumberPressed: _onNumberPressed,
-              onBackspace: _onBackspace,
-            ),
-          ],
+              // Main Content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 16.h),
+
+                      // Hero Icon
+                      Container(
+                        padding: EdgeInsets.all(24.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.shadowMedium,
+                              blurRadius: 12.r,
+                              offset: Offset(0, 4.h),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.mark_email_unread,
+                          size: 64.sp,
+                          color: AppColors.primary,
+                        ),
+                      ),
+
+                      SizedBox(height: 32.h),
+
+                      // Title
+                      Text(
+                        'Verification',
+                        style: AppTextStyles.displaySmall(
+                          color: AppColors.textPrimary(context),
+                        ),
+                      ),
+
+                      SizedBox(height: 12.h),
+
+                      // Subtitle
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: AppTextStyles.bodyLarge(
+                            color: AppColors.textSecondary(context),
+                          ),
+                          children: [
+                            const TextSpan(
+                              text: 'Enter the 6-digit code sent to\n',
+                            ),
+                            TextSpan(
+                              text: widget.email,
+                              style: AppTextStyles.bodyLarge(
+                                color: AppColors.textPrimary(context),
+                                fontWeight: AppTextStyles.semiBold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 40.h),
+
+                      // OTP Input using Pinput
+                      Pinput(
+                        controller: _pinController,
+                        focusNode: _pinFocusNode,
+                        length: 6,
+                        defaultPinTheme: PinTheme(
+                          width: 52.w,
+                          height: 64.h,
+                          textStyle: TextStyle(
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary(context),
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface(context),
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: AppColors.border(
+                                context,
+                              ).withValues(alpha: 0.3),
+                              width: 1.5.w,
+                            ),
+                          ),
+                        ),
+                        focusedPinTheme: PinTheme(
+                          width: 52.w,
+                          height: 64.h,
+                          textStyle: TextStyle(
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: AppColors.primary,
+                              width: 2.5.w,
+                            ),
+                          ),
+                        ),
+                        submittedPinTheme: PinTheme(
+                          width: 52.w,
+                          height: 64.h,
+                          textStyle: TextStyle(
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: AppColors.primary.withValues(alpha: 0.5),
+                              width: 1.5.w,
+                            ),
+                          ),
+                        ),
+                        onCompleted: (pin) {
+                          // Auto-verify when all digits are entered
+                          _onVerify();
+                        },
+                        hapticFeedbackType: HapticFeedbackType.lightImpact,
+                        cursor: Container(
+                          height: 28.h,
+                          width: 2.w,
+                          color: AppColors.primary,
+                        ),
+                      ),
+
+                      SizedBox(height: 40.h),
+
+                      // Timer & Resend
+                      Column(
+                        children: [
+                          Text(
+                            'Resend code in ${_formatTime(_remainingSeconds)}',
+                            style: AppTextStyles.bodyMedium(
+                              color: AppColors.textTertiary(context),
+                              fontWeight: AppTextStyles.medium,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          TextButton(
+                            onPressed: _canResend ? _onResend : null,
+                            child: Text(
+                              'Resend Code',
+                              style: AppTextStyles.bodyMedium(
+                                color: _canResend
+                                    ? AppColors.primary
+                                    : AppColors.primary.withValues(alpha: 0.5),
+                                fontWeight: AppTextStyles.semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 32.h),
+
+                      // Verify Button using CustomButton
+                      CustomButton(
+                        text: 'Verify',
+                        onPressed: isLoading ? null : _onVerify,
+                        size: ButtonSize.large,
+                        borderRadius: 16.r,
+                        isLoading: isLoading,
+                      ),
+
+                      SizedBox(height: 16.h),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -402,6 +416,8 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
   }
 }
 
+// Remove custom OTP input field and numeric keypad classes as they are no longer needed
+/*
 class _OTPInputField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
@@ -418,8 +434,8 @@ class _OTPInputField extends StatelessWidget {
     final hasValue = controller.text.isNotEmpty;
 
     return SizedBox(
-      width: 52,
-      height: 64,
+      width: 52.w,
+      height: 64.h,
       child: Focus(
         onFocusChange: (hasFocus) {
           // Trigger rebuild when focus changes
@@ -432,7 +448,7 @@ class _OTPInputField extends StatelessWidget {
           focusNode: focusNode,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 28,
+            fontSize: 28.sp,
             fontWeight: FontWeight.w600,
             color: hasValue
                 ? AppColors.primary
@@ -449,23 +465,23 @@ class _OTPInputField extends StatelessWidget {
                 : AppColors.surface(context),
             contentPadding: EdgeInsets.zero,
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: hasValue
                     ? AppColors.primary.withValues(alpha: 0.5)
                     : AppColors.border(context).withValues(alpha: 0.3),
-                width: 1.5,
+                width: 1.5.w,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.primary, width: 2.5),
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: AppColors.primary, width: 2.5.w),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: AppColors.border(context).withValues(alpha: 0.3),
-                width: 1.5,
+                width: 1.5.w,
               ),
             ),
           ),
@@ -499,7 +515,7 @@ class _NumericKeypad extends StatelessWidget {
           ),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
       child: SafeArea(
         top: false,
         child: Column(
@@ -511,7 +527,7 @@ class _NumericKeypad extends StatelessWidget {
               _KeyData('2', 'ABC'),
               _KeyData('3', 'DEF'),
             ]),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
 
             // Row 2
             _buildKeyRow(context, [
@@ -519,7 +535,7 @@ class _NumericKeypad extends StatelessWidget {
               _KeyData('5', 'JKL'),
               _KeyData('6', 'MNO'),
             ]),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
 
             // Row 3
             _buildKeyRow(context, [
@@ -527,7 +543,7 @@ class _NumericKeypad extends StatelessWidget {
               _KeyData('8', 'TUV'),
               _KeyData('9', 'WXYZ'),
             ]),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
 
             // Row 4
             Row(
@@ -562,9 +578,9 @@ class _NumericKeypad extends StatelessWidget {
           onNumberPressed(keyData.number);
         }
       },
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(8.r),
       child: Container(
-        height: 48,
+        height: 48.h,
         alignment: Alignment.center,
         child: isBackspace
             ? Icon(
@@ -601,3 +617,4 @@ class _KeyData {
 
   _KeyData(this.number, this.letters);
 }
+*/

@@ -38,7 +38,7 @@ class ShellLayout extends StatelessWidget {
     final selectedIndex = _calculateSelectedIndex(context);
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.background(context),
       body: child,
       bottomNavigationBar: HomeBottomNavBar(
         selectedIndex: selectedIndex,

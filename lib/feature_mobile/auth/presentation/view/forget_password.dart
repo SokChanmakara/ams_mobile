@@ -84,7 +84,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.background(context),
         body: SafeArea(
           child: Column(
             children: [
@@ -122,9 +122,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                               height: 160,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppColors.white,
+                                color: AppColors.surface(context),
                                 border: Border.all(
-                                  color: AppColors.neutral200,
+                                  color: AppColors.border(context),
                                   width: 4,
                                 ),
                                 boxShadow: [
