@@ -10,4 +10,6 @@ class BaseUrl {
   static String fileUpload = '/files/upload';
   static String userUnits = '/units';
   static String pendingBillings = '/billing-payments/pending-billings';
+  static String billingDetails(String billingId) =>
+      '/billing-payments/billings/$billingId';
 }

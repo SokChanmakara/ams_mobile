@@ -5,4 +5,8 @@ abstract class BillingRepository {
   Future<BaseResponse<PendingBillingsData>> getPendingBillings({
     String? unitId,
   });
+
+  Future<BaseResponse<BillingDetailData>> getBillingDetail({
+    required String billingId,
+  });
 }

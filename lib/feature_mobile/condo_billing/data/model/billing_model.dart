@@ -54,6 +54,13 @@ class BillingModel {
   final String createdBy;
   final String? approvedBy;
   final String? approvedAt;
+  final String paymentProofStatus;
+  final String? paymentProofUrl;
+  final String? paymentProofSubmittedAt;
+  final String? paymentProofSubmittedBy;
+  final String? paymentProofReviewedBy;
+  final String? paymentProofReviewedAt;
+  final String? paymentProofRejectionReason;
   final String createdAt;
   final String updatedAt;
   final UnitModel unit;
@@ -94,6 +101,13 @@ class BillingModel {
     required this.createdBy,
     this.approvedBy,
     this.approvedAt,
+    this.paymentProofStatus = 'not_submitted',
+    this.paymentProofUrl,
+    this.paymentProofSubmittedAt,
+    this.paymentProofSubmittedBy,
+    this.paymentProofReviewedBy,
+    this.paymentProofReviewedAt,
+    this.paymentProofRejectionReason,
     required this.createdAt,
     required this.updatedAt,
     required this.unit,
@@ -136,6 +150,15 @@ class BillingModel {
       createdBy: json['createdBy'] as String,
       approvedBy: json['approvedBy'] as String?,
       approvedAt: json['approvedAt'] as String?,
+      paymentProofStatus:
+          json['paymentProofStatus'] as String? ?? 'not_submitted',
+      paymentProofUrl: json['paymentProofUrl'] as String?,
+      paymentProofSubmittedAt: json['paymentProofSubmittedAt'] as String?,
+      paymentProofSubmittedBy: json['paymentProofSubmittedBy'] as String?,
+      paymentProofReviewedBy: json['paymentProofReviewedBy'] as String?,
+      paymentProofReviewedAt: json['paymentProofReviewedAt'] as String?,
+      paymentProofRejectionReason:
+          json['paymentProofRejectionReason'] as String?,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       unit: UnitModel.fromJson(json['unit'] as Map<String, dynamic>),
@@ -181,6 +204,13 @@ class BillingModel {
       'createdBy': createdBy,
       'approvedBy': approvedBy,
       'approvedAt': approvedAt,
+      'paymentProofStatus': paymentProofStatus,
+      'paymentProofUrl': paymentProofUrl,
+      'paymentProofSubmittedAt': paymentProofSubmittedAt,
+      'paymentProofSubmittedBy': paymentProofSubmittedBy,
+      'paymentProofReviewedBy': paymentProofReviewedBy,
+      'paymentProofReviewedAt': paymentProofReviewedAt,
+      'paymentProofRejectionReason': paymentProofRejectionReason,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'unit': unit.toJson(),
@@ -253,5 +283,23 @@ class PendingBillingsData {
   // Helper to format total outstanding
   String get formattedTotalOutstanding {
     return '\$${summary.totalOutstanding.toStringAsFixed(2)}';
+  }
+}
+
+class BillingDetailData {
+  final BillingModel billing;
+  final List<dynamic> paymentHistory;
+
+  BillingDetailData({required this.billing, required this.paymentHistory});
+
+  factory BillingDetailData.fromJson(Map<String, dynamic> json) {
+    return BillingDetailData(
+      billing: BillingModel.fromJson(json['billing'] as Map<String, dynamic>),
+      paymentHistory: json['paymentHistory'] as List<dynamic>? ?? [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'billing': billing.toJson(), 'paymentHistory': paymentHistory};
   }
 }

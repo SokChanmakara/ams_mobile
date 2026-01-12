@@ -21,4 +21,18 @@ class BillingRepoImp extends BillingRepository {
       (json) => PendingBillingsData.fromJson(json as Map<String, dynamic>),
     );
   }
+
+  @override
+  Future<BaseResponse<BillingDetailData>> getBillingDetail({
+    required String billingId,
+  }) async {
+    final response = await HttpService.instance.get(
+      BaseUrl.billingDetails(billingId),
+    );
+
+    return BaseResponse<BillingDetailData>.fromJson(
+      response.data,
+      (json) => BillingDetailData.fromJson(json as Map<String, dynamic>),
+    );
+  }
 }
