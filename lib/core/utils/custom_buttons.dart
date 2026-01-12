@@ -311,16 +311,40 @@ class ResourceButton extends StatelessWidget {
 }
 
 class BottomPaymentButton extends StatelessWidget {
-  const BottomPaymentButton({super.key});
+  final double amount;
+  final int selectedCount;
+  final bool isEnabled;
+
+  const BottomPaymentButton({
+    super.key,
+    required this.amount,
+    this.selectedCount = 0,
+    this.isEnabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
+    final hasAmount = amount > 0;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: EdgeInsets.fromLTRB(
+        20.w,
+        hasAmount ? 20.h : 12.h,
+        20.w,
+        hasAmount ? 20.h : 12.h,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.surface(context).withValues(alpha: 0.9),
+        color: hasAmount
+            ? AppColors.surface(context).withValues(alpha: 0.9)
+            : AppColors.surface(context).withValues(alpha: 0.5),
         border: Border(
-          top: BorderSide(color: AppColors.border(context), width: 1),
+          top: BorderSide(
+            color: hasAmount
+                ? AppColors.border(context)
+                : AppColors.border(context).withValues(alpha: 0.3),
+            width: 1,
+          ),
         ),
       ),
       child: SafeArea(
@@ -330,31 +354,47 @@ class BottomPaymentButton extends StatelessWidget {
           children: [
             // Payment Button
             ElevatedButton(
-              onPressed: () {
-                NavigationService.push('/payments');
-              },
+              onPressed: isEnabled && hasAmount
+                  ? () {
+                      NavigationService.push('/payments');
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary, // Deep Navy Blue
+                backgroundColor: hasAmount ? AppColors.primary : Colors.grey,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
+                disabledBackgroundColor: Colors.grey.withValues(alpha: 0.3),
+                disabledForegroundColor: Colors.grey.withValues(alpha: 0.5),
+                padding: EdgeInsets.symmetric(
+                  vertical: hasAmount ? 16.h : 12.h,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.r),
                 ),
-                elevation: 4,
-                shadowColor: const Color(0xFF002B5B).withValues(alpha: 0.3),
+                elevation: hasAmount ? 4 : 0,
+                shadowColor: hasAmount
+                    ? const Color(0xFF002B5B).withValues(alpha: 0.3)
+                    : Colors.transparent,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Pay \$1,060.00 Now',
+                    selectedCount > 0
+                        ? 'Pay \$${amount.toStringAsFixed(2)} ($selectedCount ${selectedCount == 1 ? 'Invoice' : 'Invoices'})'
+                        : hasAmount
+                        ? 'Pay \$${amount.toStringAsFixed(2)} Now'
+                        : 'Select invoices to pay',
                     style: AppTextStyles.buttonLarge(
-                      color: Colors.white,
+                      color: hasAmount
+                          ? Colors.white
+                          : Colors.grey.withValues(alpha: 0.7),
                       fontWeight: AppTextStyles.semiBold,
                     ),
                   ),
-                  SizedBox(width: 8.w),
-                  Icon(Icons.arrow_forward, size: 20.sp),
+                  if (hasAmount) ...[
+                    SizedBox(width: 8.w),
+                    Icon(Icons.arrow_forward, size: 20.sp),
+                  ],
                 ],
               ),
             ),

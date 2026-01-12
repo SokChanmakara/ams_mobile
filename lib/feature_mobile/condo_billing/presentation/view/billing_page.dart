@@ -1,6 +1,7 @@
 import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/custom_buttons.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/provider/billing_provider.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/presentation/provider/billing_state.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_header_card.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_pending_bill_card.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/widgets/Billing_Page/billing_unit_card.dart';
@@ -22,6 +23,8 @@ class BillingPage extends ConsumerStatefulWidget {
 
 class _BillingPageState extends ConsumerState<BillingPage> {
   String? _previousUnitId;
+  double _selectedAmount = 0.0;
+  int _selectedCount = 0;
 
   @override
   void initState() {
@@ -35,6 +38,13 @@ class _BillingPageState extends ConsumerState<BillingPage> {
             .read(billingNotifierProvider.notifier)
             .fetchPendingBillings(unitId: unitState.selectedUnit!.id);
       }
+    });
+  }
+
+  void _handleSelectionChanged(double amount, int count) {
+    setState(() {
+      _selectedAmount = amount;
+      _selectedCount = count;
     });
   }
 
@@ -89,7 +99,9 @@ class _BillingPageState extends ConsumerState<BillingPage> {
                     SizedBox(height: 32.h),
 
                     // Pending Billings Section
-                    BillingPendingBillCard(),
+                    BillingPendingBillCard(
+                      onSelectionChanged: _handleSelectionChanged,
+                    ),
                     SizedBox(height: 32.h),
 
                     // Unit Resources
@@ -103,7 +115,17 @@ class _BillingPageState extends ConsumerState<BillingPage> {
       ),
 
       // Fixed Bottom Payment Button
-      bottomNavigationBar: const BottomPaymentButton(),
+      bottomNavigationBar: Builder(
+        builder: (context) {
+          final billingState = ref.watch(billingNotifierProvider);
+
+          return BottomPaymentButton(
+            amount: _selectedAmount,
+            selectedCount: _selectedCount,
+            isEnabled: billingState is BillingLoaded,
+          );
+        },
+      ),
     );
   }
 }

@@ -7,11 +7,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BillingPendingBillCard extends ConsumerWidget {
-  const BillingPendingBillCard({super.key});
+class BillingPendingBillCard extends ConsumerStatefulWidget {
+  final Function(double amount, int count)? onSelectionChanged;
+
+  const BillingPendingBillCard({super.key, this.onSelectionChanged});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BillingPendingBillCard> createState() =>
+      _BillingPendingBillCardState();
+}
+
+class _BillingPendingBillCardState
+    extends ConsumerState<BillingPendingBillCard> {
+  final Set<String> _selectedBillingIds = {};
+
+  void _notifySelectionChanged(List<dynamic> pendingBillings) {
+    final selectedTotal = pendingBillings
+        .where((b) => _selectedBillingIds.contains(b.id))
+        .fold<double>(0.0, (sum, billing) {
+          final amount = double.tryParse(billing.balanceAmount) ?? 0.0;
+          return sum + amount;
+        });
+
+    widget.onSelectionChanged?.call(selectedTotal, _selectedBillingIds.length);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final billingState = ref.watch(billingNotifierProvider);
 
     return Column(
@@ -140,6 +162,17 @@ class BillingPendingBillCard extends ConsumerWidget {
                 },
               );
 
+              // Calculate selected total
+              final selectedTotal = _selectedBillingIds.isEmpty
+                  ? totalPendingOutstanding
+                  : pendingBillings
+                        .where((b) => _selectedBillingIds.contains(b.id))
+                        .fold<double>(0.0, (sum, billing) {
+                          final amount =
+                              double.tryParse(billing.balanceAmount) ?? 0.0;
+                          return sum + amount;
+                        });
+
               return Container(
                 padding: EdgeInsets.all(24.w),
                 margin: EdgeInsets.only(bottom: 16.h),
@@ -161,25 +194,29 @@ class BillingPendingBillCard extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Total Amount
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Total Outstanding',
-                          style: AppTextStyles.caption(
-                            color: AppColors.textSecondary(context),
-                            fontWeight: AppTextStyles.medium,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _selectedBillingIds.isEmpty
+                                ? 'Total Outstanding'
+                                : 'Selected Amount (${_selectedBillingIds.length})',
+                            style: AppTextStyles.caption(
+                              color: AppColors.textSecondary(context),
+                              fontWeight: AppTextStyles.medium,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          '\$${totalPendingOutstanding.toStringAsFixed(2)}',
-                          style: AppTextStyles.displaySmall(
-                            color: AppColors.textPrimary(context),
-                            fontWeight: AppTextStyles.bold,
+                          SizedBox(height: 4.h),
+                          Text(
+                            '\$${selectedTotal.toStringAsFixed(2)}',
+                            style: AppTextStyles.displaySmall(
+                              color: AppColors.textPrimary(context),
+                              fontWeight: AppTextStyles.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
 
                     // Icon
@@ -204,6 +241,80 @@ class BillingPendingBillCard extends ConsumerWidget {
             },
           ),
 
+          // Select All / Deselect All button
+          Builder(
+            builder: (context) {
+              final pendingBillings = billingState.data.billings
+                  .where((billing) => billing.status.toLowerCase() == 'pending')
+                  .toList();
+
+              if (pendingBillings.isEmpty) return const SizedBox.shrink();
+
+              return Padding(
+                padding: EdgeInsets.only(bottom: 12.h),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        if (_selectedBillingIds.length ==
+                            pendingBillings.length) {
+                          _selectedBillingIds.clear();
+                        } else {
+                          _selectedBillingIds.clear();
+                          _selectedBillingIds.addAll(
+                            pendingBillings.map((b) => b.id),
+                          );
+                        }
+                        _notifySelectionChanged(pendingBillings);
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 10.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.isDark(context)
+                            ? AppColors.surfaceDark
+                            : Colors.grey[50],
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: AppColors.border(
+                            context,
+                          ).withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Icon(
+                          //   _selectedBillingIds.length == pendingBillings.length
+                          //       ? Icons.deselect
+                          //       : Icons.select_all,
+                          //   size: 18.sp,
+                          //   color: AppColors.primary,
+                          // ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            _selectedBillingIds.length == pendingBillings.length
+                                ? 'Deselect All'
+                                : 'Select All',
+                            style: AppTextStyles.labelMedium(
+                              color: AppColors.primary,
+                              fontWeight: AppTextStyles.semiBold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+
           // Invoice List - Filter to show only pending billings
           if (billingState.data.billings
               .where((billing) => billing.status.toLowerCase() == 'pending')
@@ -221,6 +332,23 @@ class BillingPendingBillCard extends ConsumerWidget {
                             '${billing.description} • ${_formatDate(billing.billingDate)}',
                         amount: billing.formattedBalanceAmount,
                         billingId: billing.id,
+                        isSelected: _selectedBillingIds.contains(billing.id),
+                        onSelectionChanged: (selected) {
+                          setState(() {
+                            if (selected) {
+                              _selectedBillingIds.add(billing.id);
+                            } else {
+                              _selectedBillingIds.remove(billing.id);
+                            }
+                            final pendingBillings = billingState.data.billings
+                                .where(
+                                  (billing) =>
+                                      billing.status.toLowerCase() == 'pending',
+                                )
+                                .toList();
+                            _notifySelectionChanged(pendingBillings);
+                          });
+                        },
                       ),
                     );
                   })

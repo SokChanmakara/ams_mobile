@@ -10,6 +10,9 @@ class BillingInvoiceItemCard extends StatelessWidget {
   final String description;
   final String amount;
   final String billingId;
+  final bool isSelected;
+  final ValueChanged<bool>? onSelectionChanged;
+
   const BillingInvoiceItemCard({
     super.key,
     required this.icon,
@@ -17,6 +20,8 @@ class BillingInvoiceItemCard extends StatelessWidget {
     required this.description,
     required this.amount,
     required this.billingId,
+    this.isSelected = false,
+    this.onSelectionChanged,
   });
 
   @override
@@ -49,6 +54,34 @@ class BillingInvoiceItemCard extends StatelessWidget {
         ),
         child: Row(
           children: [
+            // Checkbox for selection
+            if (onSelectionChanged != null)
+              Padding(
+                padding: EdgeInsets.only(right: 12.w),
+                child: GestureDetector(
+                  onTap: () => onSelectionChanged?.call(!isSelected),
+                  child: Container(
+                    width: 24.w,
+                    height: 24.w,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primary
+                          : AppColors.surface(context),
+                      borderRadius: BorderRadius.circular(6.r),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.border(context),
+                        width: 2,
+                      ),
+                    ),
+                    child: isSelected
+                        ? Icon(Icons.check, size: 16.sp, color: Colors.white)
+                        : null,
+                  ),
+                ),
+              ),
+
             // Icon
             Container(
               width: 40.w,
