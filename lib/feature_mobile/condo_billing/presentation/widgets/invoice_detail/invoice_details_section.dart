@@ -5,12 +5,14 @@ import 'package:ams_mobile/core/utils/app_text_styles.dart';
 
 /// Invoice Details Section widget
 class InvoiceDetailsSection extends StatelessWidget {
+  final String billingType;
   final String description;
   final String billingPeriod;
   final String condominium;
 
   const InvoiceDetailsSection({
     super.key,
+    required this.billingType,
     required this.description,
     required this.billingPeriod,
     required this.condominium,
@@ -44,9 +46,22 @@ class InvoiceDetailsSection extends StatelessWidget {
             ),
             child: Column(
               children: [
+                // Billing Type
+                _DetailItem(
+                  icon: Icons.category_outlined,
+                  label: 'BILLING TYPE',
+                  value: billingType,
+                ),
+
+                // Divider
+                Divider(
+                  height: 1,
+                  color: AppColors.divider(context).withValues(alpha: 0.2),
+                ),
+
                 // Description
                 _DetailItem(
-                  icon: Icons.build_outlined,
+                  icon: Icons.description_outlined,
                   label: 'DESCRIPTION',
                   value: description,
                 ),

@@ -5,8 +5,8 @@ import 'package:ams_mobile/core/utils/app_colors.dart';
 import 'package:ams_mobile/core/utils/app_text_styles.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/provider/billing_provider.dart';
 import 'package:ams_mobile/feature_mobile/condo_billing/presentation/provider/invoice_detail_state.dart';
+import 'package:ams_mobile/feature_mobile/condo_billing/data/model/payment_status_step_model.dart';
 import 'payment_page.dart';
-import '../widgets/invoice_detail/payment_status_step_model.dart';
 import '../widgets/invoice_detail/invoice_detail_header.dart';
 // import '../widgets/invoice_detail/invoice_status_chip.dart';
 import '../widgets/invoice_detail/balance_due_card.dart';
@@ -22,6 +22,7 @@ class InvoiceDetailPage extends ConsumerStatefulWidget {
   final String balanceDue;
   final String status;
   final String description;
+  final String billingType;
   final String billingPeriod;
   final String condominium;
   final List<PaymentStatusStep> statusSteps;
@@ -29,6 +30,7 @@ class InvoiceDetailPage extends ConsumerStatefulWidget {
   const InvoiceDetailPage({
     super.key,
     this.billingId,
+    this.billingType = 'N/A',
     this.invoiceNumber = 'INV-2601-032831',
     this.balanceDue = '\$25.00',
     this.status = 'Sent',
@@ -193,6 +195,7 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
         context,
         invoiceNumber: billing.invoiceNumber,
         balanceDue: billing.formattedBalanceAmount,
+        billingType: billing.billingTypeDisplayName,
         description: billing.description,
         billingPeriod: _formatBillingPeriod(
           billing.billingPeriodStart,
@@ -209,6 +212,7 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
         context,
         invoiceNumber: widget.invoiceNumber,
         balanceDue: widget.balanceDue,
+        billingType: widget.billingType ?? 'N/A',
         description: widget.description,
         billingPeriod: widget.billingPeriod,
         condominium: widget.condominium,
@@ -222,6 +226,7 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
         context,
         invoiceNumber: widget.invoiceNumber,
         balanceDue: widget.balanceDue,
+        billingType: widget.billingType ?? 'N/A',
         description: widget.description,
         billingPeriod: widget.billingPeriod,
         condominium: widget.condominium,
@@ -236,6 +241,7 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
       context,
       invoiceNumber: widget.invoiceNumber,
       balanceDue: widget.balanceDue,
+      billingType: widget.billingType ?? 'N/A',
       description: widget.description,
       billingPeriod: widget.billingPeriod,
       condominium: widget.condominium,
@@ -249,6 +255,7 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
     BuildContext context, {
     required String invoiceNumber,
     required String balanceDue,
+    required String billingType,
     required String description,
     required String billingPeriod,
     required String condominium,
@@ -321,6 +328,7 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
 
                           // Invoice Details Section
                           InvoiceDetailsSection(
+                            billingType: billingType,
                             description: description,
                             billingPeriod: billingPeriod,
                             condominium: condominium,

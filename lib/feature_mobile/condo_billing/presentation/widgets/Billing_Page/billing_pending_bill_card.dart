@@ -162,17 +162,6 @@ class _BillingPendingBillCardState
                 },
               );
 
-              // Calculate selected total
-              final selectedTotal = _selectedBillingIds.isEmpty
-                  ? totalPendingOutstanding
-                  : pendingBillings
-                        .where((b) => _selectedBillingIds.contains(b.id))
-                        .fold<double>(0.0, (sum, billing) {
-                          final amount =
-                              double.tryParse(billing.balanceAmount) ?? 0.0;
-                          return sum + amount;
-                        });
-
               return Container(
                 padding: EdgeInsets.all(24.w),
                 margin: EdgeInsets.only(bottom: 16.h),
@@ -199,9 +188,7 @@ class _BillingPendingBillCardState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _selectedBillingIds.isEmpty
-                                ? 'Total Outstanding'
-                                : 'Selected Amount (${_selectedBillingIds.length})',
+                            'Total Outstanding',
                             style: AppTextStyles.caption(
                               color: AppColors.textSecondary(context),
                               fontWeight: AppTextStyles.medium,
@@ -209,7 +196,7 @@ class _BillingPendingBillCardState
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            '\$${selectedTotal.toStringAsFixed(2)}',
+                            '\$${totalPendingOutstanding.toStringAsFixed(2)}',
                             style: AppTextStyles.displaySmall(
                               color: AppColors.textPrimary(context),
                               fontWeight: AppTextStyles.bold,
